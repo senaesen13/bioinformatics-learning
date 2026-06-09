@@ -19,7 +19,7 @@ My journey in bioinformatics, R, Linux and data analysis
 | `mkdir` | make directory = create a folder |
 | `cd` | change directory = go into a folder |
 | `ls` | list = show what's inside a folder |
-| `git clone` | download a GitHub repo to your computer |
+| `git clone` | download a GitHub repo to your computer | 
 | `git add .` | prepare all changed files to be saved |
 | `git commit -m ""` | save a snapshot with a description |
 | `git push` | send your saved work to GitHub online |
@@ -27,5 +27,12 @@ My journey in bioinformatics, R, Linux and data analysis
 ### What GitHub is
 - Your code lives in TWO places: your Mac (local) and GitHub (online)
 - `git push` = syncing your Mac to GitHub
-- Every day you push = your work is saved forever
--
+- Every day you push = your work is saved forever (command+ S option)
+### Vocabulary
+- **repo** = a folder that remembers every change you ever made, like a time machine
+- **local** = the copy on YOUR Mac
+- **remote** = the copy on GitHub (online)
+- **commit** = taking a photo of your work at that moment
+- **push** = sending your photos from Mac to GitHub
+- **clone** = downloading a GitHub repo to your Mac for the first time
+- **token** = a special password GitHub generates for terminal access
