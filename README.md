@@ -148,3 +148,89 @@ cat results.txt | grep "significant" | head -20
 ### Why all of this matters
 These commands work on any text file — gene lists, results, sequences
 They are the building blocks of every bioinformatics pipeline
+---
+
+## DAY 1 — Part 3 — More Terminal Commands
+
+---
+
+### wc — count lines or words
+Command: wc -l genes.txt
+What it does: counts how many lines are in a file
+-l = count lines
+-w = count words
+Example output: 10 genes.txt
+Real bioinformatics use: FASTQ files have 4 lines per read
+if wc -l shows 4000000 lines → you have 1000000 reads
+
+---
+
+### sort — sort lines alphabetically
+Command: sort genes.txt
+What it does: sorts all lines from A to Z
+Example output: BRCA1, BRCA2, CDH1, EGFR, KRAS, MYC, PTEN, RB1, TP53, VHL
+Real bioinformatics use: sorting gene lists, sorting results by name
+
+---
+
+### cp — copy a file
+Command: cp genes.txt genes_backup.txt
+What it does: creates an exact copy of the file
+genes.txt = original file
+genes_backup.txt = new copy
+Real bioinformatics use: always make a backup before modifying important files
+
+---
+
+### mv — move or rename a file
+Command: mv genes_backup.txt genes_copy.txt
+What it does: renames the file
+can also move a file to a different folder
+Real bioinformatics use: organising and renaming output files
+
+---
+
+### rm — delete a file permanently
+Command: rm genes_copy.txt
+What it does: deletes the file forever
+WARNING: no trash bin, no undo — be very careful
+Real bioinformatics use: cleaning up large temporary files
+
+---
+
+### Combining commands with pipe
+Example 1: sort then count
+sort genes.txt | wc -l
+→ sort the file, then count the lines
+
+Example 2: find then count
+grep "BRCA" genes.txt | wc -l
+→ find all BRCA genes, then count how many
+
+Example 3: three commands chained
+cat results.txt | grep "significant" | wc -l
+→ read file, find significant genes, count them
+
+---
+
+### Full command reference so far
+
+| Command | Meaning |
+|---|---|
+| pwd | where am I right now? |
+| ls | what is inside this folder? |
+| mkdir | create a new folder |
+| cd | go into a folder |
+| cd .. | go back one folder |
+| touch | create an empty file |
+| cat | print entire file on screen |
+| head -3 | show first 3 lines |
+| tail -3 | show last 3 lines |
+| grep | search for a word in a file |
+| wc -l | count lines in a file |
+| sort | sort lines alphabetically |
+| cp | copy a file |
+| mv | move or rename a file |
+| rm | delete a file permanently |
+| pipe = | connect two commands together |
+| bash | run a script |
