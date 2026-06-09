@@ -22,3 +22,9 @@ min(genes)    # lowest value = 3
 # text in R always goes in quotes " "
 gene_names <- c("BRCA1", "TP53", "EGFR", "MYC", "PTEN")
 gene_names
+# Data frame - a table connecting gene names to expression values
+gene_table <- data.frame(
+  gene = c("BRCA1", "TP53", "EGFR"),
+  expression = c(10, 25, 3)
+)
+gene_table
