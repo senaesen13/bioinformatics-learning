@@ -77,3 +77,74 @@ File extension = .sh
 | token | a special password GitHub generates for terminal access |
 | .sh | file extension for bash scripts |
 | .md | file extension for markdown files |
+---
+
+## DAY 1 — Part 2 — New Terminal Commands
+
+---
+
+### cat — print entire file on screen
+Command: cat genes.txt
+What it does: reads the file and prints every line on screen
+Real bioinformatics use: reading a FASTQ file or gene list
+Example output:
+BRCA1
+TP53
+EGFR
+MYC
+
+---
+
+### head — show only the first lines
+Command: head -3 genes.txt
+What it does: shows only the first 3 lines
+The number after - decides how many lines to show
+Real bioinformatics use: some files have millions of lines
+you cannot cat the whole thing, so you use head to peek at the first few lines
+Example output:
+BRCA1
+TP53
+EGFR
+
+---
+
+### tail — show only the last lines
+Command: tail -3 genes.txt
+What it does: shows only the last 3 lines
+Real bioinformatics use: checking the end of a results file
+Example output:
+VHL
+RB1
+BRCA2
+
+---
+
+### grep — search for a word inside a file
+Command: grep "BRCA" genes.txt
+What it does: finds every line that contains the word BRCA
+Real bioinformatics use: you have 50000 genes in a results file
+you cannot scroll through all of them
+grep finds your gene of interest instantly
+Example output:
+BRCA1
+BRCA2
+
+---
+
+### pipe | — connect two commands together
+Command: cat genes.txt | grep "BR"
+What it does: reads the file AND searches at the same time
+The | symbol sends the output of the left command into the right command
+Think of it like a water pipe — data flows from left to right
+
+Example of chaining 3 commands:
+cat results.txt | grep "significant" | head -20
+→ read results file
+→ find only significant genes
+→ show only top 20
+
+---
+
+### Why all of this matters
+These commands work on any text file — gene lists, results, sequences
+They are the building blocks of every bioinformatics pipeline
