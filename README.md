@@ -1,38 +1,79 @@
 # bioinformatics-learning
 My journey in bioinformatics, R, Linux and data analysis
+---
+
+## DAY 1 — Detailed Notes
 
 ---
 
-## DAY 1 — June 9, 2026
-**Goal: Set up my workspace**
+### What is Terminal?
+Terminal is the command center of my computer.
+Instead of clicking, I type commands.
+Every bioinformatics tool runs in Terminal.
+To open: Command + Space → type Terminal → Enter
 
-### What I did
-- Opened Terminal on Mac (Command + Space → Terminal)
-- Created my project folder on Desktop called `bioinfo-learning`
-- Connected it to my GitHub repo with `git clone`
-- Opened the folder in VS Code
-- Wrote my first notes in README.md
+---
 
-### Commands I learned
+### What is VS Code?
+VS Code is my code editor — where I write all my scripts.
+It has the file explorer on the left, editor in the middle, terminal at the bottom.
+I will write R scripts, Python scripts and bash scripts here.
+
+---
+
+### What is GitHub?
+GitHub is where my code lives online.
+My code exists in TWO places:
+- Local = on my Mac (Desktop/bioinfo-learning)
+- Remote = on GitHub (github.com/senaesen13/bioinformatics-learning)
+Every day I push my work so it is saved online forever.
+
+---
+
+### What is a bash script?
+A bash script is a file containing terminal commands.
+Instead of typing commands one by one, I save them in a file and run them all at once.
+In the future my RNA-seq pipeline will be a bash script.
+File extension = .sh
+
+---
+
+### Terminal Commands I learned today
+
+| Command | Meaning | Example |
+|---|---|---|
+| pwd | where am I right now? | pwd |
+| ls | what is inside this folder? | ls |
+| mkdir | create a new folder | mkdir week1 |
+| cd | go into a folder | cd week1 |
+| cd .. | go back one folder | cd .. |
+| touch | create an empty file | touch practice.sh |
+| bash | run a script | bash practice.sh |
+| echo | print a message on screen | echo "Hello!" |
+
+---
+
+### Git Commands I learned today
+
 | Command | Meaning |
 |---|---|
-| `mkdir` | make directory = create a folder |
-| `cd` | change directory = go into a folder |
-| `ls` | list = show what's inside a folder |
-| `git clone` | download a GitHub repo to your computer | 
-| `git add .` | prepare all changed files to be saved |
-| `git commit -m ""` | save a snapshot with a description |
-| `git push` | send your saved work to GitHub online |
+| git clone | download a GitHub repo to my Mac |
+| git add . | select all changed files to save |
+| git commit -m "" | take a snapshot with a label |
+| git push | send snapshot to GitHub online |
 
-### What GitHub is
-- Your code lives in TWO places: your Mac (local) and GitHub (online)
-- `git push` = syncing your Mac to GitHub
-- Every day you push = your work is saved forever (command+ S option)
+---
+
 ### Vocabulary
-- **repo** = a folder that remembers every change you ever made, like a time machine
-- **local** = the copy on YOUR Mac
-- **remote** = the copy on GitHub (online)
-- **commit** = taking a photo of your work at that moment
-- **push** = sending your photos from Mac to GitHub
-- **clone** = downloading a GitHub repo to your Mac for the first time
-- **token** = a special password GitHub generates for terminal access
+
+| Word | Meaning |
+|---|---|
+| repo | a folder that remembers every change, like a time machine |
+| local | the copy on my Mac |
+| remote | the copy on GitHub online |
+| commit | a saved snapshot of my work |
+| push | sending my work from Mac to GitHub |
+| clone | downloading a GitHub repo to my Mac |
+| token | a special password GitHub generates for terminal access |
+| .sh | file extension for bash scripts |
+| .md | file extension for markdown files |
