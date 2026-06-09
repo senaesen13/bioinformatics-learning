@@ -18,3 +18,7 @@ mean(genes)   # average = 18.6
 sum(genes)    # total = 93
 max(genes)    # highest value = 47
 min(genes)    # lowest value = 3
+# Strings - text vectors
+# text in R always goes in quotes " "
+gene_names <- c("BRCA1", "TP53", "EGFR", "MYC", "PTEN")
+gene_names
