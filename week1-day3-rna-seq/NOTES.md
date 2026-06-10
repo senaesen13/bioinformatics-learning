@@ -148,3 +148,123 @@ Made of three distinct zones:
 
   Core idea: more RNA from a gene → more reads → more active that gene was.
 
+
+---
+
+## DNA → mRNA → Counts — The Full Biological Flow
+
+Understanding where RNA-seq data actually comes from:
+
+```
+DNA (in nucleus)
+  └─ Transcription → pre-mRNA (raw copy, has introns + exons)
+       └─ RNA splicing → mature mRNA (introns removed, has poly-A tail)
+            └─ normally → Translation → Protein (cell function)
+            └─ RNA-seq intercepts here!
+                 └─ Extract + reverse transcribe → cDNA library
+                      └─ Sequence (NGS) → FASTQ reads
+                           └─ Align to genome → Count matrix
+```
+
+Key point: RNA-seq does NOT measure proteins. It measures mRNA — which tells
+you how active each gene was at that moment.
+
+### What is a count matrix?
+
+The final output of the pipeline — a table of genes vs samples:
+
+  Gene       Sample_A   Sample_B   Sample_C
+  BRCA1        4521       203        4890
+  TP53          890      8821         754
+  GAPDH        9200      9100        9050
+
+High number = gene was active. Low number = gene was quiet.
+This is what you load into R and analyse with DESeq2.
+
+---
+
+## cDNA Synthesis — Step by Step
+
+### Step 1 — Start: mature mRNA
+- Single-stranded RNA ending with a poly-A tail (string of A's)
+- Example: 5'— AUGCCAGUUCGAUGGC...AAAAAAAAAA —3'
+
+### Step 2 — Oligo-dT primer binds
+- A string of T's sticks to the poly-A tail (A pairs with T)
+- Gives reverse transcriptase a starting point
+
+  mRNA:   5'—...AAAAAAAAAA—3'
+                ||||||||||||
+  primer: 3'—TTTTTTTTTT—5'
+
+### Step 3 — Reverse transcriptase copies (RNA → first strand cDNA)
+- Enzyme reads along the mRNA and builds a complementary DNA strand
+
+  mRNA:  5'— AUGCCAGUUCGAUGGC...AAAAAAAAAA —3'
+  cDNA:  3'— TACGGTCAAGCTACCG...TTTTTTTTTT —5'
+
+### Step 4 — mRNA is removed
+- Original mRNA destroyed by RNase H
+- Only the single-stranded cDNA remains
+
+### Step 5 — Second strand synthesis
+- DNA polymerase builds a second strand → double-stranded cDNA (dsDNA)
+
+### Step 6 — Fragmentation
+- dsDNA cut into ~150bp overlapping pieces by sonication or enzymes
+- Fragments overlap so the computer can reassemble them later
+
+---
+
+## FASTQ Files — Deep Dive
+
+A FASTQ file is the raw text output from the sequencer.
+Every read has exactly 4 lines:
+
+  @SRR1234567.1 read_001    <- read name
+  ATGCCAGTTCGATGGCTAGCAAT   <- DNA sequence (the real data)
+  +                          <- separator (always just +)
+  IIIIIIIHHHHIIIIIIHHIIIII  <- quality scores per base
+
+### Quality scores (Phred+33 encoding)
+
+  Character   I     H     ?     5     !
+  Score       40    39    30    20    0
+  Accuracy    99.9% 99.9% 99.9% 99%   0%
+
+  Q30+ = good (less than 1 error per 1000 bases)
+  Q20-  = too many errors, unreliable
+
+### Scale
+  One experiment = 20–100 million reads = 5–20 GB compressed
+  FastQC (Week 2) checks quality before you do any analysis
+
+---
+
+## Tools Installed — Week 1
+
+  Homebrew   Mac terminal app store
+  Kallisto   FASTQ → gene counts (terminal tool)
+  DESeq2     Differential expression analysis (R)
+  tximport   Import Kallisto output into R
+  ggplot2    Plotting
+  pheatmap   Heatmaps (Week 3)
+  ggrepel    Gene labels on volcano plots (Week 3)
+
+### Pipeline
+
+  FASTQ → Kallisto → tximport → DESeq2 → ggplot2/pheatmap → results
+
+### Installation commands (Mac, one by one)
+
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  brew install kallisto
+  kallisto version
+  Rscript -e 'install.packages("BiocManager", repos="https://cran.r-project.org"); BiocManager::install("DESeq2")'
+  Rscript -e 'install.packages(c("ggplot2","dplyr","pheatmap","ggrepel"), repos="https://cran.r-project.org")'
+  Rscript -e 'BiocManager::install("tximport")'
+  Rscript -e 'library(DESeq2); library(tximport); library(ggplot2); library(pheatmap); library(ggrepel); cat("All packages working!\n")'
+
+---
+
+*Updated: Week 1 Day 3 — DNA→mRNA→counts, cDNA synthesis, FASTQ deep dive, tool installation*
