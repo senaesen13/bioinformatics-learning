@@ -60,3 +60,29 @@ ggplot(data, aes(x=gene, y=expression, fill=significant)) +
 - setwd() = tells R which folder to look in
 - working directory = the folder R is currently looking in
 - $ = accesses one column from a data frame
+---
+
+## Statistics — log2FC and p-value
+
+### log2FC — how much a gene changed
+- Positive log2FC = gene went UP in disease
+- Negative log2FC = gene went DOWN in disease
+- log2FC = 1 means gene doubled (2x increase)
+- log2FC = 2 means gene quadrupled (4x increase)
+- log2FC = -1 means gene halved (2x decrease)
+- We use |log2FC| > 1 as cutoff = only care about genes that changed at least 2x
+
+### Example
+MYC in healthy = 10, MYC in cancer = 40
+log2(40/10) = 2 → MYC went up 4x in cancer
+
+### p-value — is the change real or just noise?
+- p-value < 0.05 = the change is statistically significant = real
+- p-value > 0.05 = could be random chance = not significant
+- In DESeq2 we use padj (adjusted p-value) because we test 20,000 genes at once
+
+### The DEG cutoff in DESeq2
+A gene is called differentially expressed when:
+- padj < 0.05 (statistically significant)
+- |log2FC| > 1 (biologically meaningful change)
+Both conditions must be TRUE
