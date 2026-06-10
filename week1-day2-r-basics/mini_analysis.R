@@ -26,3 +26,5 @@ top3 <- data[data$significant == TRUE,]
 top3 <- top3[order(-top3$expression),]
 top3 <- head(top3, 3)
 print(top3)
+# Save the volcano plot as a PNG file
+ggsave("volcano_plot.png", width = 8, height = 6)
