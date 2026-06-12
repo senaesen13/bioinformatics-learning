@@ -1,1 +1,5 @@
 .DS_Store
+*.fastq
+*.fa.gz
+*.idx
+SRR*/
