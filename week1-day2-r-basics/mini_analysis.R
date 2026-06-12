@@ -28,3 +28,4 @@ top3 <- head(top3, 3)
 print(top3)
 # Save the volcano plot as a PNG file
 ggsave("volcano_plot.png", width = 8, height = 6)
+log2(40/10)

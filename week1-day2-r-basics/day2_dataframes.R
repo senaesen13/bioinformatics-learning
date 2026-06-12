@@ -73,3 +73,13 @@ ggplot(data, aes(x = gene, y = expression, fill = significant)) +
   labs(title = "Gene Expression",
        x = "Gene",
        y = "Expression")
+install.packages("dplyr")
+data <- read.csv("~/Desktop/bioinfo-learning/week1-day2-r-basics/gene_expression.csv")
+data
+library(dplyr)
+filter(data, significant == TRUE)
+select(data, gene, expression)
+arrange(data,expression)
+data %>%
+  filter(significant == TRUE) %>%
+  arrange(expression)
