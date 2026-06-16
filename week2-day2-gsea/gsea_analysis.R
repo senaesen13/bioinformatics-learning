@@ -37,6 +37,8 @@ library(enrichplot)
 library(ggplot2)
 library(dplyr)
 
+dir.create("plots", showWarnings = FALSE)
+
 
 # -----------------------------------------------------------------------------
 # 2. RE-RUN MINIMAL DESeq2 TO GET RESULTS
@@ -166,17 +168,17 @@ ego_simplified <- simplify(ego, cutoff = 0.7, by = "p.adjust")
 # Dot plot: size = gene count, colour = adjusted p-value
 dotplot(ego_simplified, showCategory = 20, title = "GO Biological Process — ORA") +
   theme(axis.text.y = element_text(size = 9))
-ggsave("go_ora_dotplot.png", width = 9, height = 7, dpi = 150)
+ggsave("plots/go_ora_dotplot.png", width = 9, height = 7, dpi = 150)
 
 # Bar plot
 barplot(ego_simplified, showCategory = 20, title = "GO Biological Process — ORA")
-ggsave("go_ora_barplot.png", width = 9, height = 7, dpi = 150)
+ggsave("plots/go_ora_barplot.png", width = 9, height = 7, dpi = 150)
 
 # Gene-concept network: links genes to the GO terms they drive
 cnetplot(ego_simplified,
          showCategory = 8,
          foldChange   = setNames(res_df$log2FoldChange, res_df$ensembl_id))
-ggsave("go_ora_cnetplot.png", width = 10, height = 8, dpi = 150)
+ggsave("plots/go_ora_cnetplot.png", width = 10, height = 8, dpi = 150)
 
 
 # -----------------------------------------------------------------------------
@@ -200,7 +202,7 @@ head(as.data.frame(ekegg)[, c("Description", "GeneRatio", "BgRatio", "p.adjust")
 
 if (nrow(as.data.frame(ekegg)) > 0) {
   dotplot(ekegg, showCategory = 20, title = "KEGG Pathways — ORA")
-  ggsave("kegg_ora_dotplot.png", width = 9, height = 6, dpi = 150)
+  ggsave("plots/kegg_ora_dotplot.png", width = 9, height = 6, dpi = 150)
 }
 
 
@@ -246,7 +248,7 @@ if (nrow(as.data.frame(gsea_go)) > 0) {
   dotplot(gsea_go, showCategory = 20, split = ".sign") +
     facet_grid(. ~ .sign) +
     labs(title = "GO Biological Process — GSEA")
-  ggsave("go_gsea_dotplot.png", width = 12, height = 7, dpi = 150)
+  ggsave("plots/go_gsea_dotplot.png", width = 12, height = 7, dpi = 150)
 
   # Classic GSEA enrichment plot for the top enriched term
   top_term <- as.data.frame(gsea_go) %>%
@@ -257,7 +259,7 @@ if (nrow(as.data.frame(gsea_go)) > 0) {
   gseaplot2(gsea_go,
             geneSetID = top_term,
             title     = paste("GSEA —", as.data.frame(gsea_go)[top_term, "Description"]))
-  ggsave("go_gsea_enrichmentplot.png", width = 8, height = 5, dpi = 150)
+  ggsave("plots/go_gsea_enrichmentplot.png", width = 8, height = 5, dpi = 150)
 }
 
 
@@ -283,7 +285,7 @@ if (nrow(as.data.frame(gsea_kegg)) > 0) {
   dotplot(gsea_kegg, showCategory = 20, split = ".sign") +
     facet_grid(. ~ .sign) +
     labs(title = "KEGG Pathways — GSEA")
-  ggsave("kegg_gsea_dotplot.png", width = 12, height = 7, dpi = 150)
+  ggsave("plots/kegg_gsea_dotplot.png", width = 12, height = 7, dpi = 150)
 
   # Enrichment plot for the most significant KEGG pathway
   top_kegg <- as.data.frame(gsea_kegg) %>%
@@ -294,7 +296,7 @@ if (nrow(as.data.frame(gsea_kegg)) > 0) {
   gseaplot2(gsea_kegg,
             geneSetID = top_kegg,
             title     = paste("GSEA —", as.data.frame(gsea_kegg)[top_kegg, "Description"]))
-  ggsave("kegg_gsea_enrichmentplot.png", width = 8, height = 5, dpi = 150)
+  ggsave("plots/kegg_gsea_enrichmentplot.png", width = 8, height = 5, dpi = 150)
 }
 
 
