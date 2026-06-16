@@ -36,6 +36,9 @@ library(ggrepel)
 library(dplyr)
 library(pheatmap)
 
+# Create plots output directory if it doesn't exist
+dir.create("plots", showWarnings = FALSE)
+
 
 # -----------------------------------------------------------------------------
 # 2. LOAD THE AIRWAY DATASET
@@ -91,8 +94,9 @@ head(normalised_counts)
 # fitted trend, borrowing strength across genes
 dds <- estimateDispersions(dds)
 
-plotDispEsts(dds,
-             main = "Dispersion Estimates\nblack=raw, red=trend, blue=shrunken")
+png("plots/dispersion_estimates.png", width = 800, height = 600, res = 120)
+plotDispEsts(dds, main = "Dispersion Estimates\nblack=raw, red=trend, blue=shrunken")
+dev.off()
 
 
 # -----------------------------------------------------------------------------
@@ -140,10 +144,12 @@ head(cbind(raw_lfc      = res$log2FoldChange,
 # 10. MA PLOT
 # -----------------------------------------------------------------------------
 
+png("plots/ma_plot.png", width = 1200, height = 600, res = 120)
 par(mfrow = c(1, 2))
 plotMA(res,        ylim = c(-5, 5), main = "MA Plot — Raw LFC")
 plotMA(res_shrunk, ylim = c(-5, 5), main = "MA Plot — Shrunken LFC")
 par(mfrow = c(1, 1))
+dev.off()
 
 
 # -----------------------------------------------------------------------------
@@ -188,7 +194,7 @@ ggplot(res_df, aes(x = log2FoldChange, y = neg_log10_padj, colour = sig)) +
   theme_bw(base_size = 12) +
   theme(legend.position = "top")
 
-ggsave("volcano_plot.png", width = 8, height = 6, dpi = 150)
+ggsave("plots/volcano_plot.png", width = 8, height = 6, dpi = 150)
 
 
 # -----------------------------------------------------------------------------
@@ -220,7 +226,7 @@ ggplot(pca_data, aes(x = PC1, y = PC2, colour = dex, shape = cell)) +
   ) +
   theme_bw(base_size = 12)
 
-ggsave("pca_plot.png", width = 7, height = 5, dpi = 150)
+ggsave("plots/pca_plot.png", width = 7, height = 5, dpi = 150)
 
 
 # -----------------------------------------------------------------------------
@@ -236,7 +242,9 @@ pheatmap(sample_dist_m,
          clustering_distance_cols = sample_dists,
          annotation_col           = annotation,
          main                     = "Sample-to-Sample Distance",
-         color                    = colorRampPalette(c("#2166AC", "white"))(50))
+         color                    = colorRampPalette(c("#2166AC", "white"))(50),
+         filename                 = "plots/sample_distance_heatmap.png",
+         width = 7, height = 6)
 
 
 # -----------------------------------------------------------------------------
@@ -258,7 +266,9 @@ pheatmap(mat_scaled,
          show_colnames  = TRUE,
          main           = "Top 40 DE Genes — Row-scaled VST counts",
          fontsize_row   = 7,
-         color          = colorRampPalette(c("#4DBBD5", "white", "#E64B35"))(100))
+         color          = colorRampPalette(c("#4DBBD5", "white", "#E64B35"))(100),
+         filename       = "plots/top40_genes_heatmap.png",
+         width = 8, height = 9)
 
 
 # -----------------------------------------------------------------------------
