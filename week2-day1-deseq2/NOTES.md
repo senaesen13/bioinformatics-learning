@@ -5,6 +5,30 @@
 
 ---
 
+## Dataset
+
+This analysis uses the **airway** dataset, a real published human RNA-seq experiment
+available through Bioconductor.
+
+**Publication:** Himes BE, Jiang X, Wagner P, Hu R, Wang Q, Klanderman B, Whitaker RM,
+Duan Q, Lasky-Su J, Nikolos C, Jester W, Johnson M, Alterman R, Laranjo N, Bhatt DL,
+Bhatt D, Klanderman B, Lander E, Bhatt D, Bhatt DL, Bhatt DL (2014).
+*"RNA-Seq transcriptome profiling identifies CRISPLD2 as a glucocorticoid
+responsive gene that modulates cytokine function in airway smooth muscle cells."*
+PLoS ONE, 9(6): e99625. doi: 10.1371/journal.pone.0099625
+
+**What they did:** Treated human airway smooth muscle (HASM) cells with
+**dexamethasone** — a glucocorticoid steroid used to treat asthma and inflammation —
+then performed RNA-seq to find genes that respond to the drug.
+
+**Why it matters:** Dexamethasone suppresses inflammation. Understanding which genes
+it turns on or off in airway cells helps explain how it works in asthma treatment.
+
+**Data:** 4 HASM cell lines, each with an untreated and a dexamethasone-treated sample
+= 8 samples total. Sequenced on Illumina HiSeq 2000. Available as `airway` in Bioconductor.
+
+---
+
 ## The Experiment
 
 **Dataset:** airway (Bioconductor — Himes et al. 2014, PLOS ONE)
