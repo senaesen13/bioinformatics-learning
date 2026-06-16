@@ -37,7 +37,8 @@ library(dplyr)
 library(pheatmap)
 
 # Create plots output directory if it doesn't exist
-dir.create("plots", showWarnings = FALSE)
+dir.create("plots",   showWarnings = FALSE)
+dir.create("results", showWarnings = FALSE)
 
 
 # -----------------------------------------------------------------------------
@@ -279,10 +280,10 @@ res_export <- res_df %>%
   arrange(padj) %>%
   mutate(across(where(is.numeric), ~ round(.x, 6)))
 
-write.csv(res_export, "deseq2_results.csv", row.names = FALSE)
+write.csv(res_export, "results/deseq2_results.csv", row.names = FALSE)
 
 sig_genes <- res_export %>% filter(sig != "NS")
-write.csv(sig_genes, "deseq2_significant_genes.csv", row.names = FALSE)
+write.csv(sig_genes, "results/deseq2_significant_genes.csv", row.names = FALSE)
 
 cat("Total genes tested:       ", nrow(res_export), "\n")
 cat("Significant (FDR<5%, |LFC|>1):", nrow(sig_genes), "\n")

@@ -37,7 +37,8 @@ library(enrichplot)
 library(ggplot2)
 library(dplyr)
 
-dir.create("plots", showWarnings = FALSE)
+dir.create("plots",   showWarnings = FALSE)
+dir.create("results", showWarnings = FALSE)
 
 
 # -----------------------------------------------------------------------------
@@ -304,14 +305,14 @@ if (nrow(as.data.frame(gsea_kegg)) > 0) {
 # 9. EXPORT RESULTS
 # -----------------------------------------------------------------------------
 
-write.csv(as.data.frame(ego),       "go_ora_results.csv",   row.names = FALSE)
-write.csv(as.data.frame(ekegg),     "kegg_ora_results.csv", row.names = FALSE)
-write.csv(as.data.frame(gsea_go),   "go_gsea_results.csv",  row.names = FALSE)
-write.csv(as.data.frame(gsea_kegg), "kegg_gsea_results.csv",row.names = FALSE)
+write.csv(as.data.frame(ego),       "results/go_ora_results.csv",   row.names = FALSE)
+write.csv(as.data.frame(ekegg),     "results/kegg_ora_results.csv", row.names = FALSE)
+write.csv(as.data.frame(gsea_go),   "results/go_gsea_results.csv",  row.names = FALSE)
+write.csv(as.data.frame(gsea_kegg), "results/kegg_gsea_results.csv",row.names = FALSE)
 
 cat("\n--- Summary ---\n")
 cat("GO ORA  terms:     ", nrow(as.data.frame(ego)),       "\n")
 cat("KEGG ORA pathways: ", nrow(as.data.frame(ekegg)),     "\n")
 cat("GO GSEA terms:     ", nrow(as.data.frame(gsea_go)),   "\n")
 cat("KEGG GSEA pathways:", nrow(as.data.frame(gsea_kegg)), "\n")
-cat("Done. Output files saved to", getwd(), "\n")
+cat("Done. Plots → plots/  Results → results/  (", getwd(), ")\n")
