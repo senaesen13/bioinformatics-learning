@@ -9,7 +9,7 @@ Each folder contains the scripts, results, plots and notes from that day's work.
 - Terminal basics and bash scripting
 - R programming for bioinformatics
 - RNA-seq concepts and alignment (FastQC, Kallisto)
-- Differential expression analysis (DESeq2)
+- Differential expression analysis (DESeq2) — learned on Himes et al. airway dataset, applied to KCL mouse MI data
 - Pathway enrichment (GSEA, clusterProfiler)
 - Drug repositioning using gene expression signatures
 - Single-cell RNA-seq analysis (Seurat)
@@ -20,8 +20,8 @@ Each folder contains the scripts, results, plots and notes from that day's work.
 
 R · DESeq2 · clusterProfiler · Seurat · FastQC · Kallisto · bash · Git
 
-## Dataset Highlights
+## Key Datasets
 
-- Himes et al. airway dataset (bulk RNA-seq)
-- KCL mouse myocardial infarction dataset (SRR6068402–SRR6068409)
-- 10x Genomics PBMC 3k (scRNA-seq)
+- Himes et al. airway dataset — used to learn DESeq2 pipeline
+- KCL mouse myocardial infarction dataset (SRR6068402–SRR6068409) — real KCL data, used for DESeq2, GSEA and drug repositioning
+- 10x Genomics PBMC 3k — scRNA-seq learning dataset (Week 3)
