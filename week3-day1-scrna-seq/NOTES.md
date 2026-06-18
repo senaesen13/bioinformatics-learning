@@ -221,5 +221,51 @@ The tools overlap more than they seem:
 
 ---
 
+## Results Summary
+
+9 cell types identified from 2,638 QC-passed cells (original: 2,700).
+
+| Cell type | Cells | % | Cluster | Key markers used |
+|-----------|-------|---|---------|-----------------|
+| CD4+ Naive T | 684 | 25.9% | 0 | IL7R, CCR7 — naive T cell homing receptors |
+| CD14+ Monocytes | 481 | 18.2% | 1 | CD14, LYZ, CST3 — classical monocyte markers |
+| CD4+ Memory T | 476 | 18.0% | 2 | IL7R, S100A4 — IL7R present but CCR7 lower than naive |
+| B cells | 344 | 13.0% | 3 | MS4A1 (CD20), CD79A — B cell receptor complex |
+| CD8+ T | 291 | 11.0% | 4 | CD8A, NKG7 — cytotoxic T cell markers |
+| CD16+ Monocytes | 162 | 6.1% | 5 | FCGR3A (CD16), MS4A7 — non-classical monocytes |
+| NK cells | 155 | 5.9% | 6 | GNLY, NKG7 — cytotoxic granule proteins |
+| Dendritic cells | 32 | 1.2% | 7 | FCER1A, CST3 — antigen-presenting cells |
+| Platelets | 13 | 0.5% | 8 | PPBP — platelet-specific chemokine |
+| **Total** | **2,638** | | | |
+
+Annotation was cross-validated using:
+- `FindAllMarkers()` output (top markers per cluster by log2FC)
+- Average expression of canonical markers across clusters (checked in R)
+- Dot plot (`plots/08_marker_dotplot.png`)
+
+---
+
+## References
+
+1. **Dataset** — 10x Genomics PBMC 3k. *Peripheral blood mononuclear cells from a healthy human donor.*
+   https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz
+
+2. **Seurat v5** — Hao Y, et al. (2021). "Integrated analysis of multimodal single-cell data."
+   *Cell* 184(13):3573–3587.
+   https://doi.org/10.1016/j.cell.2021.04.048
+
+3. **Tutorial** — Satija Lab PBMC 3k guided clustering tutorial.
+   https://satijalab.org/seurat/articles/pbmc3k_tutorial
+
+4. **UMAP** — McInnes L, Healy J, Melville J. (2018). "UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction."
+   *arXiv*:1802.03426.
+   https://arxiv.org/abs/1802.03426
+
+5. **Louvain clustering** — Blondel VD, et al. (2008). "Fast unfolding of communities in large networks."
+   *Journal of Statistical Mechanics: Theory and Experiment* 2008(10):P10008.
+   https://doi.org/10.1088/1742-5468/2008/10/P10008
+
+---
+
 *Week 3, Day 1 — Seurat PBMC 3k on 10x Genomics data*
 *Follows from: Week 2 Day 5 scRNA-seq theory notes*
