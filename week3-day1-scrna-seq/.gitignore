@@ -1,0 +1,5 @@
+# Raw 10x data — download with: curl -L -o pbmc3k.tar.gz https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz
+filtered_gene_bc_matrices/
+
+# Seurat object — regenerate by running scripts/seurat_pbmc3k.R
+results/pbmc3k_seurat.rds
