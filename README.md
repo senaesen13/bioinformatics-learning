@@ -1,6 +1,6 @@
 # bioinformatics-learning
 
-A bioinformatics learning repository built during my 9-week internship at King's College London (KCL), summer 2026.
+A bioinformatics learning repository built during my 10-week internship at King's College London (KCL), summer 2026.
 
 Each folder contains the scripts, results, plots and notes from that day's work. Topics covered throughout the internship include terminal basics, R programming, bulk RNA-seq, pathway enrichment, drug repositioning, single-cell RNA-seq, spatial transcriptomics, and multi-omics integration.
 
