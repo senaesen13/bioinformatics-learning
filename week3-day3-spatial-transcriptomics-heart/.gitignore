@@ -1,0 +1,8 @@
+# Raw data — download with:
+# curl -L -o data/V1_Human_Heart_filtered_feature_bc_matrix.tar.gz https://cf.10xgenomics.com/samples/spatial-exp/1.1.0/V1_Human_Heart/V1_Human_Heart_filtered_feature_bc_matrix.tar.gz
+# curl -L -o data/V1_Human_Heart_spatial.tar.gz https://cf.10xgenomics.com/samples/spatial-exp/1.1.0/V1_Human_Heart/V1_Human_Heart_spatial.tar.gz
+# Then: cd data && tar -xzf V1_Human_Heart_filtered_feature_bc_matrix.tar.gz && tar -xzf V1_Human_Heart_spatial.tar.gz
+data/
+
+# Seurat object — regenerate by running scripts/spatial_heart.R
+results/heart_seurat.rds
