@@ -2,7 +2,7 @@
 
 > **Script:** `scripts/ccRCC_pipeline_adapted.R`
 > **Dataset:** TCGA KIRC (kidney renal clear cell carcinoma) — 528 patients, 500 genes
-> **Based on:** Li et al. (2022) EBioMedicine 78:103963 (Elif's KCL workshop materials)
+> **Based on:** Li et al. (2022) EBioMedicine 78:103963 (SysMedicine @ SciLifeLab workshop (github.com/sysmedicine))
 > **Run from:** `week3-day2-drug-repositioning-ccRCC-LINCS/` as `Rscript scripts/ccRCC_pipeline_adapted.R`
 
 ---
