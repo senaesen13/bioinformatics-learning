@@ -1,0 +1,3 @@
+# Exclude downloaded GEO files — re-downloadable via GEOquery
+*.gz
+*.soft
