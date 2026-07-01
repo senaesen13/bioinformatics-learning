@@ -1,0 +1,16 @@
+"condition","cell_type","n","proportion"
+"Cirrhosis","B Cell",469,5.58200428469412
+"Cirrhosis","Cholangiocyte",29,0.345155915258272
+"Cirrhosis","Endothelial",1645,19.5786717448227
+"Cirrhosis","Hepatocyte",1630,19.4001428231373
+"Cirrhosis","Macrophage",652,7.76005712925494
+"Cirrhosis","NK Cell",1841,21.9114496548441
+"Cirrhosis","Stellate",225,2.6779338252797
+"Cirrhosis","T Cell",1911,22.7445846227089
+"Healthy","B Cell",335,2.88842903948957
+"Healthy","Endothelial",1047,9.02741852043456
+"Healthy","Hepatocyte",1556,13.4161062252112
+"Healthy","Macrophage",994,8.5704431798586
+"Healthy","NK Cell",4970,42.852215899293
+"Healthy","Stellate",543,4.68184169684428
+"Healthy","T Cell",2153,18.5635454388688
