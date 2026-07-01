@@ -1,0 +1,5 @@
+# Exclude large GEO downloaded files — re-downloadable via GEOquery
+GSE162694/
+*.gz
+*.csv
+*.soft
