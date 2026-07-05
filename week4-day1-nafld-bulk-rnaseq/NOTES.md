@@ -17,6 +17,8 @@
 F0 = 35 · F1 = 30 · F2 = 27 · F3 = 8 · F4 = 12 · Normal = 31
 
 > Validation cohort analysis (GSE135251) is in `week4-day2-nafld-validation-rnaseq/` — see that folder for methodology and results.
+>
+> Cross-cohort pathway comparison (GSEA concordance) is in `week4-day2-nafld-validation-rnaseq/NOTES.md` under **"Cross-Cohort Pathway Comparison (GSEA)"**. Short summary: ECM remodelling (ECM-receptor interaction, Integrin signaling, Focal adhesion) and Cholesterol metabolism are concordantly activated in NAFLD across both cohorts; inflammatory pathways (TNF, IL-17, NF-kB) are discordant — likely a cell-composition confound driven by fibrosis-stage differences between the two datasets.
 
 ---
 
@@ -91,10 +93,17 @@ The MLE (un-shrunk) LFC is used for the threshold, because apeglm shrinkage aggr
 | File | Description |
 |---|---|
 | `scripts/deseq2_analysis.R` | Full discovery pipeline (biotype filter → DESeq2 → plots) |
+| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, apeglm LFC ranking, plots + results |
 | `plots/pca.png` | PCA of VST-normalised counts (protein-coding genes) |
 | `plots/volcano.png` | Volcano plot: apeglm LFC x-axis, MLE padj colour, TREM2/SPP1/GPNMB labelled |
+| `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (167 pathways, padj<0.05, split by direction) |
+| `plots/gsea_kegg_ridgeplot.png` | KEGG GSEA ridgeplot (core-enrichment LFC distributions) |
+| `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot (29 gene sets) |
+| `plots/gsea_hallmark_ridgeplot.png` | Hallmark GSEA ridgeplot |
 | `results/deseq2_results.csv` | Full DESeq2 results (MLE + apeglm LFC, gene symbol) |
 | `results/significant_genes.csv` | 24 significant genes (padj<0.01, \|MLE LFC\|>2) |
+| `results/gsea_kegg_results.csv` | KEGG GSEA results (167 significant pathways) |
+| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (29 significant gene sets) |
 | `results/protein_coding_gene_list.rds` | 16,390 protein-coding Ensembl IDs (shared with day2 pipeline) |
 
 ---
@@ -105,5 +114,8 @@ The MLE (un-shrunk) LFC is used for the threshold, because apeglm shrinkage aggr
 - **biomaRt** (Durinck et al., 2009) — gene biotype annotation
 - **DESeq2** (Love, Huber & Anders, 2014) — differential expression
 - **apeglm** (Zhu, Ibrahim & Love, 2018) — LFC shrinkage
-- **org.Hs.eg.db** — Ensembl → gene symbol mapping
+- **clusterProfiler** (Wu et al., 2021) — GSEA (KEGG + custom gene sets)
+- **msigdbr** — MSigDB Hallmark gene sets (H collection)
+- **enrichplot** — dotplot and ridgeplot visualisation
+- **org.Hs.eg.db** — Ensembl → gene symbol / Entrez ID mapping
 - **ggplot2** + **ggrepel** — visualisation

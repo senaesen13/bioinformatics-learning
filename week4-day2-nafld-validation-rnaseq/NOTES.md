@@ -139,15 +139,146 @@ fibrosis stage distributions.
 
 ---
 
+## GSEA Results (Validation Cohort)
+
+**Method:** Genes ranked by apeglm-shrunken log2FC (NAFLD / Normal), descending.
+clusterProfiler `gseKEGG` (organism = "hsa") + `GSEA` with MSigDB Hallmark (H collection).
+Both use BH-adjusted p-value cutoff < 0.05, minGSSize = 15, maxGSSize = 500.
+
+**KEGG:** 87 significant pathways
+
+| Direction | Top pathways (padj) |
+|---|---|
+| Activated in NAFLD | ECM-receptor interaction (4.4e-04), Integrin signaling (1.6e-03), Cornified envelope formation (3.7e-03), Focal adhesion (3.9e-02), Cholesterol metabolism (3.0e-02) |
+| Suppressed in NAFLD | Ribosome (3.5e-08), Coronavirus disease (2.3e-06), IL-17 signaling (2.3e-04), Amphetamine addiction (5.3e-04), MAPK signaling (5.3e-04) |
+
+Note: Several immune/inflammatory pathways (IL-17, TNF, osteoclast differentiation) are
+**suppressed** in this cohort, opposite to the discovery cohort — see cross-cohort comparison below.
+
+**Hallmark:** 18 significant gene sets
+
+| Direction | Gene set | NES | padj |
+|---|---|---|---|
+| Activated | CHOLESTEROL_HOMEOSTASIS | +2.12 | 1.6e-05 |
+| Activated | APICAL_JUNCTION | +1.94 | 9.2e-06 |
+| Activated | MYOGENESIS | +1.68 | 3.3e-03 |
+| Activated | MTORC1_SIGNALING | +1.58 | 6.9e-03 |
+| Activated | MITOTIC_SPINDLE | +1.57 | 8.9e-03 |
+| Suppressed | TNFA_SIGNALING_VIA_NFKB | −3.04 | 5.0e-09 |
+| Suppressed | HYPOXIA | −2.13 | 8.8e-07 |
+| Suppressed | KRAS_SIGNALING_UP | −2.00 | 9.1e-06 |
+| Suppressed | UV_RESPONSE_UP | −1.75 | 1.9e-03 |
+| Suppressed | TGF_BETA_SIGNALING | −1.76 | 9.3e-03 |
+
+---
+
+## Cross-Cohort Pathway Comparison (GSEA)
+
+Discovery = GSE162694 (Day 1) · Validation = GSE135251 (Day 2)
+Overlap = pathways/gene sets significant (padj < 0.05) in BOTH cohorts.
+
+### KEGG: 45 pathways significant in both · 15 concordant · 30 discordant
+
+#### Concordant activated in NAFLD (both cohorts NES > 0)
+
+| Pathway | NES disc | NES val | padj disc | padj val |
+|---|---|---|---|---|
+| ECM-receptor interaction | +1.70 | +2.06 | 1.5e-04 | 4.4e-04 |
+| Integrin signaling | +1.81 | +1.81 | 3.6e-08 | 1.6e-03 |
+| Focal adhesion | +1.69 | +1.49 | 7.1e-07 | 3.9e-02 |
+| Cornified envelope formation | +1.74 | +1.84 | 6.5e-06 | 3.7e-03 |
+| Cholesterol metabolism | +1.50 | +1.73 | 2.6e-02 | 3.0e-02 |
+| Fructose and mannose metabolism | +1.57 | +1.90 | 2.6e-02 | 8.6e-03 |
+| Cytoskeleton in muscle cells | +1.68 | +1.51 | 1.2e-06 | 3.1e-02 |
+| Human papillomavirus infection | +1.52 | +1.41 | 9.4e-06 | 4.7e-02 |
+
+**No concordant suppressed KEGG pathways** were found in both cohorts.
+
+#### Major discordant KEGG pathways (opposite direction)
+
+| Pathway | NES disc | NES val | Likely explanation |
+|---|---|---|---|
+| IL-17 signaling pathway | +2.20 | −2.23 | Inflammatory signal inverted |
+| TNF signaling pathway | +1.92 | −1.81 | Inflammatory signal inverted |
+| NF-kappa B signaling pathway | +1.87 | −1.47 | Inflammatory signal inverted |
+| Steroid hormone biosynthesis | −2.96 | +1.62 | Opposing metabolic shifts |
+| Osteoclast differentiation | +1.89 | −1.69 | Immune infiltrate composition |
+| Th17 cell differentiation | +1.91 | −1.37 | T-cell infiltrate difference |
+| Non-alcoholic fatty liver disease | +1.43 | −1.63 | Pathway contains mixed signals |
+
+### Hallmark: 10 gene sets significant in both · 2 concordant · 8 discordant
+
+#### Concordant activated in NAFLD (both cohorts)
+
+| Gene set | NES disc | NES val | padj disc | padj val |
+|---|---|---|---|---|
+| MYOGENESIS | +1.85 | +1.68 | 5.9e-10 | 3.3e-03 |
+| APICAL_JUNCTION | +1.64 | +1.94 | 8.7e-06 | 9.2e-06 |
+
+**No concordant suppressed Hallmark gene sets** were found in both cohorts.
+
+#### Major discordant Hallmark gene sets
+
+| Gene set | NES disc | NES val |
+|---|---|---|
+| TNFA_SIGNALING_VIA_NFKB | +2.14 | −3.04 |
+| EPITHELIAL_MESENCHYMAL_TRANSITION | +1.98 | −1.41 |
+| INFLAMMATORY_RESPONSE | +1.95 | −1.48 |
+| HYPOXIA | +1.84 | −2.13 |
+| KRAS_SIGNALING_UP | +1.69 | −2.00 |
+| TGF_BETA_SIGNALING | +1.55 | −1.76 |
+
+### Interpretation
+
+**Robust cross-cohort signal (concordant in both):** ECM remodelling pathways
+(ECM-receptor interaction, Integrin signaling, Focal adhesion), Cholesterol metabolism,
+Myogenesis, and Apical junction are consistently activated in NAFLD across both datasets.
+These reflect fibrosis-associated extracellular matrix remodelling and hepatic lipid
+handling — the biological core of NAFLD.
+
+**Large-scale discordance of inflammatory pathways:** IL-17, TNF, NF-kB, TNFA/NF-kB
+(Hallmark), and related immune gene sets are activated in the discovery cohort but
+suppressed in the validation cohort. This mirrors the gene-level discordance already
+observed for NR4A1 and RGS1 (see Cross-Cohort Validation Summary above). Probable
+causes:
+
+1. **Cell-composition confound.** GSE135251 is heavily enriched for advanced-fibrosis
+   samples (NASH F3/F4). In advanced NASH, hepatocytes are replaced by fibrotic ECM;
+   the bulk RNA signal is dominated by hepatocyte/ECM transcriptomes, diluting the
+   immune cell signal. The 10 control samples in GSE135251 are transcriptionally "pure"
+   liver, so the ratio flips.
+
+2. **Unbalanced control group.** Ten controls vs 206 NAFLD makes DESeq2 size-factor
+   estimation sensitive to outliers in the control group, which can affect gene ranking
+   and hence GSEA direction.
+
+3. **These immune pathways require single-cell or deconvolution approaches** to be
+   reliably interpreted across bulk RNA-seq datasets with different fibrosis-stage
+   compositions.
+
+**Conclusion:** The concordant ECM/adhesion/cholesterol pathways are the most
+dataset-independent NAFLD signatures at the pathway level and represent the most
+interpretable cross-cohort findings. Inflammatory pathway enrichment results are
+cohort-composition-dependent and should be interpreted with caution in bulk RNA-seq.
+
+---
+
 ## Output Files
 
 | File | Description |
 |---|---|
 | `scripts/validation_gse135251.R` | Full pipeline: download → filter → DESeq2 → cross-cohort |
+| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, apeglm LFC ranking, plots + results |
 | `plots/validation_overlap.png` | Bar chart: discovery-only / both / validation-only gene counts |
 | `plots/lfc_correlation.png` | LFC scatter (13,100 shared genes), purple = both sig, yellow = markers |
+| `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (padj<0.05, split by direction) |
+| `plots/gsea_kegg_ridgeplot.png` | KEGG GSEA ridgeplot (core-enrichment LFC distributions) |
+| `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot |
+| `plots/gsea_hallmark_ridgeplot.png` | Hallmark GSEA ridgeplot |
 | `results/gse135251_results.csv` | Full DESeq2 results (MLE + apeglm LFC, gene symbol) |
-| `results/validation_overlap_summary.csv` | Overlap stats, Fisher's test, concordance, correlation |
+| `results/gsea_kegg_results.csv` | KEGG GSEA results (87 significant pathways) |
+| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (18 significant gene sets) |
+| `results/validation_overlap_summary.csv` | Gene overlap stats, Fisher's test, concordance, correlation |
 | `results/protein_coding_gene_list.rds` | Protein-coding Ensembl IDs (biomaRt, for pipeline reproducibility) |
 | `data/GSE135251/` | Raw HTSeq count files — gitignored, re-downloadable via script |
 
@@ -158,5 +289,8 @@ fibrosis stage distributions.
 - **GEOquery** (Davis & Meltzer, 2007) — GEO data download
 - **DESeq2** (Love, Huber & Anders, 2014) — differential expression
 - **apeglm** (Zhu, Ibrahim & Love, 2018) — LFC shrinkage
-- **org.Hs.eg.db** — Ensembl → gene symbol mapping
+- **clusterProfiler** (Wu et al., 2021) — GSEA (KEGG + custom gene sets)
+- **msigdbr** — MSigDB Hallmark gene sets (H collection)
+- **enrichplot** — dotplot and ridgeplot visualisation
+- **org.Hs.eg.db** — Ensembl → gene symbol / Entrez ID mapping
 - **ggplot2** + **ggrepel** — visualisation
