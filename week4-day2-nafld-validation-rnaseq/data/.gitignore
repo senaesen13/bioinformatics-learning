@@ -1,0 +1,5 @@
+# Exclude large GEO downloaded files — re-downloadable via GEOquery
+# See validation_gse135251.R STEP 3 for download instructions
+GSE135251/*.gz
+GSE135251/*.tar
+GSE135251/*.soft.gz
