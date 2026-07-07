@@ -4,3 +4,10 @@
 *.idx
 SRR*/
 *.idx
+# Large raw data archives (cached locally, not for git)
+*.tar
+*.dat.gz
+*.soft.gz
+*_series_matrix.txt.gz
+*/raw_files/
+*/metadata_cache.csv
