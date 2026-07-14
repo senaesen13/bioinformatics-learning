@@ -165,7 +165,7 @@ dds_val <- DESeq(dds_val, parallel = TRUE)
 
 # MLE (un-shrunk) for filtering; apeglm for reporting
 res_val_mle <- as.data.frame(
-  results(dds_val, contrast = c("condition", "NAFLD", "Normal"), alpha = 0.01)
+  results(dds_val, contrast = c("condition", "NAFLD", "Normal"), alpha = 0.05)
 ) %>%
   tibble::rownames_to_column("ensembl_id") %>%
   rename(lfc_mle = log2FoldChange, lfcSE_mle = lfcSE,
@@ -189,12 +189,12 @@ write.csv(res_val_df, "results/gse135251_results.csv", row.names = FALSE)
 cat("Validation results saved: results/gse135251_results.csv\n")
 
 # ============================================================
-# STEP 8 — Significant genes (padj_mle < 0.01, |lfc_mle| > 2)
+# STEP 8 — Significant genes (padj_mle < 0.05, |lfc_mle| > 1)
 # ============================================================
-cat("\n=== STEP 8: Significant genes (padj<0.01, |MLE LFC|>2) ===\n")
+cat("\n=== STEP 8: Significant genes (padj<0.05, |MLE LFC|>1) ===\n")
 
 sig_val <- res_val_df %>%
-  filter(!is.na(padj_mle), !is.na(lfc_mle), padj_mle < 0.01, abs(lfc_mle) > 2)
+  filter(!is.na(padj_mle), !is.na(lfc_mle), padj_mle < 0.05, abs(lfc_mle) > 1)
 
 n_up_val   <- sum(sig_val$lfc_mle > 0)
 n_down_val <- sum(sig_val$lfc_mle < 0)
@@ -207,7 +207,7 @@ for (g in c("TREM2", "SPP1", "GPNMB")) {
   row <- res_val_df %>% filter(gene_symbol == g)
   if (nrow(row) == 0) { cat(g, ": not found\n"); next }
   r <- row[1, ]
-  in_sig <- !is.na(r$padj_mle) && r$padj_mle < 0.01 && abs(r$lfc_mle) > 2
+  in_sig <- !is.na(r$padj_mle) && r$padj_mle < 0.05 && abs(r$lfc_mle) > 1
   cat(sprintf("%s: MLE log2FC=%+.3f | apeglm=%+.3f | padj=%.2e | sig=%s\n",
               g, r$lfc_mle, r$lfc_apeglm, r$padj_mle, in_sig))
 }
@@ -271,9 +271,9 @@ for (g in c("TREM2", "SPP1", "GPNMB")) {
   d_r   <- res_disc    %>% filter(gene_symbol == g)
   v_r   <- res_val_df  %>% filter(gene_symbol == g)
   d_sig <- nrow(d_r) > 0 && !is.na(d_r$padj_mle[1]) &&
-           d_r$padj_mle[1] < 0.01 && abs(d_r$lfc_mle[1]) > 2
+           d_r$padj_mle[1] < 0.05 && abs(d_r$lfc_mle[1]) > 1
   v_sig <- nrow(v_r) > 0 && !is.na(v_r$padj_mle[1]) &&
-           v_r$padj_mle[1] < 0.01 && abs(v_r$lfc_mle[1]) > 2
+           v_r$padj_mle[1] < 0.05 && abs(v_r$lfc_mle[1]) > 1
   cat(sprintf(
     "%s: disc log2FC=%s padj=%s sig=%s | val log2FC=%s padj=%s sig=%s\n", g,
     if (nrow(d_r) > 0) sprintf("%+.3f", d_r$lfc_mle[1]) else "NA",
@@ -300,7 +300,7 @@ p_venn <- ggplot(venn_df, aes(x = reorder(Category, -Count), y = Count, fill = G
   scale_fill_manual(values = c(disc = "#1565C0", both = "#6A1B9A", val = "#C62828")) +
   labs(
     title    = "Overlap: Discovery vs Validation Significant Genes",
-    subtitle = sprintf("GSE162694 (n=%d) vs GSE135251 (n=%d) | padj<0.01 & |MLE LFC|>2 | %d shared",
+    subtitle = sprintf("GSE162694 (n=%d) vs GSE135251 (n=%d) | padj<0.05 & |MLE LFC|>1 | %d shared",
                        length(disc_ids), length(val_ids), length(overlap)),
     x = NULL, y = "Gene count"
   ) +

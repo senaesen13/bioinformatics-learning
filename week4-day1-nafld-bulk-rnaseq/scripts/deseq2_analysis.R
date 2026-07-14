@@ -2,7 +2,7 @@
 ## Week 4 Day 1 — NAFLD Bulk RNA-seq: Corrected Discovery Pipeline
 ## Dataset: GSE162694 (Suppli et al. 2021, Hepatology)
 ## Methodology: protein-coding filter → mean-count filter →
-##   DESeq2 (~condition, Normal vs NAFLD) → padj<0.01, |LFC|>2
+##   DESeq2 (~condition, Normal vs NAFLD) → padj<0.05, |MLE LFC|>1
 ## ============================================================
 
 suppressPackageStartupMessages({
@@ -219,22 +219,22 @@ write.csv(res_df, "results/deseq2_results.csv", row.names = FALSE)
 cat("Full DESeq2 results saved: results/deseq2_results.csv\n")
 
 # ============================================================
-# STEP 8 — Significant gene list (padj < 0.01, |LFC| > 2)
+# STEP 8 — Significant gene list (padj < 0.05, |MLE LFC| > 1)
 # ============================================================
-cat("\n=== STEP 8: Significant genes (padj < 0.01, |LFC| > 2) ===\n")
+cat("\n=== STEP 8: Significant genes (padj < 0.05, |MLE LFC| > 1) ===\n")
 
 sig_genes <- res_df %>%
   filter(!is.na(padj), !is.na(log2FoldChange)) %>%
-  filter(padj < 0.01, abs(log2FoldChange) > 2)
+  filter(padj < 0.05, abs(log2FoldChange) > 1)
 
 n_up   <- sum(sig_genes$log2FoldChange > 0)
 n_down <- sum(sig_genes$log2FoldChange < 0)
 n_tot  <- nrow(sig_genes)
 
-cat("Significant genes (padj<0.01, |LFC|>2):\n")
+cat("Significant genes (padj<0.05, |LFC|>1):\n")
 cat("  Up in NAFLD:  ", n_up, "\n")
 cat("  Down in NAFLD:", n_down, "\n")
-cat("  Total:        ", n_tot, "(expected ~1500)\n")
+cat("  Total:        ", n_tot, "\n")
 
 write.csv(sig_genes, "results/significant_genes.csv", row.names = FALSE)
 cat("Significant gene list saved: results/significant_genes.csv\n")
@@ -251,7 +251,7 @@ for (g in marker_genes) {
     cat(g, ": not found in results\n")
   } else {
     row <- row[1, ]
-    in_sig <- !is.na(row$padj) && row$padj < 0.01 && abs(row$log2FoldChange) > 2
+    in_sig <- !is.na(row$padj) && row$padj < 0.05 && abs(row$log2FoldChange) > 1
     cat(sprintf("%s: log2FC = %.3f | padj = %.2e | significant = %s\n",
                 g, row$log2FoldChange, row$padj, in_sig))
   }
@@ -295,8 +295,8 @@ volcano_df <- res_df %>%
     label          = ifelse(!is.na(gene_symbol), gene_symbol, ensembl_id),
     neg_log10_padj = -log10(padj + 1e-300),
     sig = case_when(
-      padj < 0.01 & log2FoldChange >  2 ~ "Up in NAFLD",
-      padj < 0.01 & log2FoldChange < -2 ~ "Down in NAFLD",
+      padj < 0.05 & log2FoldChange >  1 ~ "Up in NAFLD",
+      padj < 0.05 & log2FoldChange < -1 ~ "Down in NAFLD",
       TRUE ~ "NS"
     )
   )
@@ -326,13 +326,13 @@ p_volcano <- ggplot(volcano_df, aes(x = log2FoldChange, y = neg_log10_padj, colo
     "Down in NAFLD" = "#1565C0",
     "NS"            = "grey70"
   )) +
-  geom_vline(xintercept = c(-2, 2), linetype = "dashed",
+  geom_vline(xintercept = c(-1, 1), linetype = "dashed",
              colour = "black", linewidth = 0.4) +
-  geom_hline(yintercept = -log10(0.01), linetype = "dashed",
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed",
              colour = "black", linewidth = 0.4) +
   labs(
     title    = "Volcano Plot: NAFLD vs Normal Liver",
-    subtitle = sprintf("GSE162694 | padj<0.01 & |LFC|>2 | %d up, %d down | TREM2/SPP1/GPNMB = yellow diamonds",
+    subtitle = sprintf("GSE162694 | padj<0.05 & |MLE LFC|>1 | %d up, %d down | TREM2/SPP1/GPNMB = yellow diamonds",
                        n_up, n_down),
     x        = "log2 Fold Change (NAFLD / Normal)",
     y        = expression(-log[10](p[adj])),
@@ -354,7 +354,7 @@ cat("  Biotype annotation method:", biotype_method, "\n")
 cat("  Starting genes:          ", nrow(counts_mat),   "\n")
 cat("  After protein-coding:    ", nrow(counts_pc),    "\n")
 cat("  After mean-count filter: ", nrow(counts_filt),  "\n")
-cat("  Sig genes (padj<0.01, |LFC|>2):\n")
+cat("  Sig genes (padj<0.05, |MLE LFC|>1):\n")
 cat("    Up in NAFLD:  ", n_up,   "\n")
 cat("    Down in NAFLD:", n_down, "\n")
 cat("    Total:        ", n_tot,  "\n")

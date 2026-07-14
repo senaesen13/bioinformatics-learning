@@ -24,6 +24,12 @@ F0 = 35 · F1 = 30 · F2 = 27 · F3 = 8 · F4 = 12 · Normal = 31
 
 ## Methodology
 
+> **Threshold update (2026-07-14):** Significance thresholds were changed from
+> `padj < 0.01 & |MLE LFC| > 2` to `padj < 0.05 & |MLE LFC| > 1` to explore a
+> broader gene set. All significant gene counts, tables, and statistics below reflect
+> the new thresholds. GSEA was not re-run (it ranks all genes by LFC, not just the
+> significant subset).
+
 ### Step 1 — Gene Biotype Annotation (applied before count filtering)
 
 Protein-coding genes were identified using **biomaRt** `useEnsembl()` (Ensembl current via asia mirror, release ~111). For each Ensembl ID in the count matrix, `gene_biotype` was retrieved via `getBM()`. Only genes annotated as `protein_coding` were retained.
@@ -44,9 +50,9 @@ After protein-coding filtering, genes with `rowMeans(counts) < 10` were removed.
 
 ### Step 4 — Significance Threshold
 
-**Filtering criterion for significant gene list:** `padj < 0.01` AND `|log2FoldChange_MLE| > 2`
+**Filtering criterion for significant gene list:** `padj < 0.05` AND `|log2FoldChange_MLE| > 1`
 
-The MLE (un-shrunk) LFC is used for the threshold, because apeglm shrinkage aggressively contracts fold-change estimates toward zero, causing biologically large effects to fall below a hard |LFC| > 2 cutoff. The apeglm LFC is reported in the output table and used for the volcano plot x-axis (it provides better point estimates), but is not used for inclusion/exclusion filtering.
+The MLE (un-shrunk) LFC is used for the threshold, because apeglm shrinkage aggressively contracts fold-change estimates toward zero, causing biologically large effects to fall below a hard LFC cutoff. The apeglm LFC is reported in the output table (it provides better point estimates), but is not used for inclusion/exclusion filtering.
 
 ---
 
@@ -62,15 +68,15 @@ The MLE (un-shrunk) LFC is used for the threshold, because apeglm shrinkage aggr
 
 ---
 
-## Significant Genes — padj < 0.01 AND |MLE LFC| > 2
+## Significant Genes — padj < 0.05 AND |MLE LFC| > 1
 
 | Direction | Count |
 |---|---|
-| Up in NAFLD | 24 |
-| Down in NAFLD | 0 |
-| **Total** | **24** |
+| Up in NAFLD | 470 |
+| Down in NAFLD | 15 |
+| **Total** | **485** |
 
-**vs. expected ~1500:** The discrepancy reflects the nature of this dataset. At padj < 0.01 there are 5,173 significant genes, but the median |LFC| among them is only 0.43; the 99th percentile is 1.72. The |LFC| > 2 threshold captures only the most extreme 0.5% of effect sizes. This is consistent with comparing healthy liver to NAFLD across *all* fibrosis stages combined — the F0/F1 samples (n=65 of 112 NAFLD) are transcriptionally close to normal and dilute the signal from advanced disease. The expected ~1500 figure was not achievable without either lowering the LFC threshold (|LFC| > 1 gives 470 genes) or restricting to severe fibrosis only.
+**Context:** At padj < 0.05 there are 5,631 significant genes, but the median |MLE LFC| among them is modest; the |LFC| > 1 threshold captures genes with at least a 2-fold change. The 485 significant genes reflect the biology of comparing healthy liver to NAFLD across *all* fibrosis stages combined — the F0/F1 samples (n=65 of 112 NAFLD) are transcriptionally close to normal and dilute the signal from advanced disease. The predominance of up-regulated genes (470 up vs 15 down) is expected: NAFLD involves activation of fibrosis, inflammation, and lipid-handling programmes more than suppression of constitutively expressed hepatocyte genes at these fold-change magnitudes.
 
 ---
 
@@ -79,12 +85,10 @@ The MLE (un-shrunk) LFC is used for the threshold, because apeglm shrinkage aggr
 | Gene | MLE log2FC | padj | In sig list? |
 |---|---|---|---|
 | **TREM2** | +2.48 | 5.2e-13 | **YES** |
-| SPP1 | +1.87 | 1.1e-07 | NO — LFC below 2× |
-| GPNMB | +1.19 | 2.3e-09 | NO — LFC below 2× |
+| **SPP1** | +1.87 | 1.1e-07 | **YES** |
+| **GPNMB** | +1.19 | 2.3e-09 | **YES** |
 
-**TREM2** is significant at the strict threshold.
-
-**SPP1 and GPNMB** are statistically significant (padj < 0.01) and consistently upregulated, but their fold changes do not reach 2×. This is biologically expected: both genes are expressed in macrophage and stellate cell subpopulations that are diluted within whole-liver biopsies, especially at early fibrosis stages. See day2 for validation cohort results.
+All three canonical NAFLD macrophage markers are now significant under the relaxed thresholds. Their MLE log2FC values (1.19–2.48) are genuine, not driven by outliers — apeglm-shrunken estimates are consistent (+2.41, +1.77, +1.14 respectively). The fold changes reflect dilution by whole-liver bulk RNA-seq across mixed fibrosis stages; scRNA-seq in macrophage subpopulations would show substantially larger effects. See day2 for validation cohort concordance.
 
 ---
 
@@ -95,13 +99,13 @@ The MLE (un-shrunk) LFC is used for the threshold, because apeglm shrinkage aggr
 | `scripts/deseq2_analysis.R` | Full discovery pipeline (biotype filter → DESeq2 → plots) |
 | `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, apeglm LFC ranking, plots + results |
 | `plots/pca.png` | PCA of VST-normalised counts (protein-coding genes) |
-| `plots/volcano.png` | Volcano plot: apeglm LFC x-axis, MLE padj colour, TREM2/SPP1/GPNMB labelled |
+| `plots/volcano.png` | Volcano plot: MLE LFC x-axis, MLE padj colour, thresholds padj<0.05 & \|LFC\|>1, TREM2/SPP1/GPNMB labelled |
 | `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (167 pathways, padj<0.05, split by direction) |
 | `plots/gsea_kegg_ridgeplot.png` | KEGG GSEA ridgeplot (core-enrichment LFC distributions) |
 | `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot (29 gene sets) |
 | `plots/gsea_hallmark_ridgeplot.png` | Hallmark GSEA ridgeplot |
 | `results/deseq2_results.csv` | Full DESeq2 results (MLE + apeglm LFC, gene symbol) |
-| `results/significant_genes.csv` | 24 significant genes (padj<0.01, \|MLE LFC\|>2) |
+| `results/significant_genes.csv` | 485 significant genes (padj<0.05, \|MLE LFC\|>1) |
 | `results/gsea_kegg_results.csv` | KEGG GSEA results (167 significant pathways) |
 | `results/gsea_hallmark_results.csv` | Hallmark GSEA results (29 significant gene sets) |
 | `results/protein_coding_gene_list.rds` | 16,390 protein-coding Ensembl IDs (shared with day2 pipeline) |

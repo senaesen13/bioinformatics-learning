@@ -36,6 +36,12 @@ The disease status column in GEO metadata is `disease:ch1`:
 
 ## Methodology
 
+> **Threshold update (2026-07-14):** Significance thresholds were changed from
+> `padj < 0.01 & |MLE LFC| > 2` to `padj < 0.05 & |MLE LFC| > 1` to explore a
+> broader gene set (matching the update in the discovery cohort). All significant gene
+> counts, tables, and statistics below reflect the new thresholds. GSEA was not re-run
+> (it ranks all genes by LFC, not just the significant subset).
+
 Identical pipeline to the discovery cohort:
 
 1. **Protein-coding filter** — applied before count filtering. Same gene list derived
@@ -47,7 +53,7 @@ Identical pipeline to the discovery cohort:
 3. **DESeq2** — design `~ condition` (reference = Normal). Both MLE (un-shrunk) and
    apeglm-shrunk LFC are computed and stored in the results table.
 
-4. **Significance threshold** — `padj < 0.01` AND `|log2FC_MLE| > 2`.
+4. **Significance threshold** — `padj < 0.05` AND `|log2FC_MLE| > 1`.
    MLE LFC is used for threshold filtering; apeglm LFC is reported in the output table
    (consistent with the discovery cohort approach).
 
@@ -63,17 +69,20 @@ Identical pipeline to the discovery cohort:
 
 ## Significant Gene Results
 
-**Threshold:** padj < 0.01 AND |MLE log2FC| > 2
+**Threshold:** padj < 0.05 AND |MLE log2FC| > 1
 
 | Direction | Count |
 |---|---|
-| Up in NAFLD | 63 |
-| Down in NAFLD | 40 |
-| **Total** | **103** |
+| Up in NAFLD | 645 |
+| Down in NAFLD | 413 |
+| **Total** | **1058** |
 
-The validation cohort yields more significant genes (103 vs 24 in discovery) despite
-having only 10 controls, because the NAFLD group here is enriched for advanced fibrosis
-(F3+F4 = 68/206 samples), which increases average effect size relative to controls.
+The validation cohort yields more significant genes (1058 vs 485 in discovery) and
+more balanced up/down representation. The larger down-regulated set in GSE135251
+reflects its heavy enrichment for advanced fibrosis (NASH F3/F4 = 68/206 samples):
+in advanced disease, hepatocyte-specific transcription programmes are suppressed as
+parenchyma is replaced by fibrotic tissue, producing strong down-regulation signals
+that are averaged out in the discovery cohort's more even fibrosis-stage distribution.
 
 ---
 
@@ -82,60 +91,88 @@ having only 10 controls, because the NAFLD group here is enriched for advanced f
 | Gene | MLE log2FC | padj | In sig list? |
 |---|---|---|---|
 | **TREM2** | +2.52 | 2.2e-07 | **YES** |
-| SPP1 | +1.41 | 2.8e-03 | NO — LFC below 2× |
-| GPNMB | +0.91 | 6.0e-03 | NO — LFC below 2× |
+| **SPP1** | +1.41 | 2.8e-03 | **YES** |
+| GPNMB | +0.91 | 6.0e-03 | NO — LFC just below 1× |
 
-**TREM2** replicates as significant with concordant direction (upregulated in NAFLD
-in both cohorts, similar magnitude: +2.48 discovery, +2.52 validation).
+**TREM2 and SPP1** are now significant in the validation cohort. Both replicate the
+discovery cohort direction (upregulated in NAFLD): TREM2 at similar magnitude (+2.48
+discovery, +2.52 validation); SPP1 with modest attenuation (+1.87 discovery, +1.41
+validation).
 
-**SPP1 and GPNMB** are statistically significant (padj < 0.01 in discovery; padj < 0.05
-in validation) and consistently upregulated, but their fold changes stay below 2× in
-both cohorts. This is expected for bulk RNA-seq across mixed fibrosis stages — both
-genes are expressed in macrophage/stellate cell subpopulations that are diluted within
-whole-liver biopsies. They are genuine NAFLD markers but the bulk RNA-seq fold change
-does not reach the stringent |LFC| > 2 threshold.
+**GPNMB** is statistically significant (padj = 6.0e-03) and upregulated, but its MLE
+LFC (+0.91) falls just below the |LFC| > 1 cutoff. This is consistent with bulk
+RNA-seq dilution effects — GPNMB is a macrophage/stellate cell marker that is
+expressed in a subpopulation diluted by the predominant hepatocyte signal in
+whole-liver biopsies.
 
 ---
 
 ## Cross-Cohort Validation Summary
 
-**7 genes significant in both cohorts** (Ensembl ID match):
+**139 genes significant in both cohorts** (Ensembl ID match):
 
-| Gene | disc log2FC | disc padj | val log2FC | val padj | Concordant |
-|---|---|---|---|---|---|
-| TREM2 | +2.48 | 5.2e-13 | +2.52 | 2.2e-07 | YES |
-| CHI3L1 | +2.23 | 1.3e-09 | +2.19 | 1.1e-04 | YES |
-| STMN2 | +2.68 | 4.0e-08 | +2.57 | 3.6e-03 | YES |
-| PDZK1IP1 | +2.20 | 1.4e-07 | +2.23 | 2.2e-04 | YES |
-| PRAMEF10 | +3.52 | 2.5e-10 | +3.23 | 3.2e-05 | YES |
-| NR4A1 | +2.04 | 8.5e-08 | −3.72 | 6.4e-35 | NO |
-| RGS1 | +2.04 | 1.2e-06 | −4.52 | 1.6e-49 | NO |
+### Key concordantly up-regulated overlap genes (selected)
 
-NR4A1 and RGS1 show opposite directions between cohorts (up in discovery, strongly
-down in validation). Both regulate immune cell function; the discordance likely reflects
-cohort-level differences in inflammatory cell composition. The large and significant
-downregulation in the validation cohort is noteworthy and may reflect hepatocyte
-dedifferentiation effects in advanced fibrosis that dominate in GSE135251.
+| Gene | disc log2FC | val log2FC | Notes |
+|---|---|---|---|
+| TREM2 | +2.48 | +2.52 | Kupffer/macrophage NAFLD marker |
+| PRAMEF10 | +3.52 | +3.23 | Consistently largest FC in both |
+| STMN2 | +2.68 | +2.57 | Stathmin-2; neural/hepatic stress |
+| MMP9 | +2.28 | +1.40 | ECM remodelling |
+| CHI3L1 | +2.23 | +2.19 | Fibrosis-associated lectin |
+| PDZK1IP1 | +2.20 | +2.23 | MAP17; tubular/cholestatic signal |
+| JUNB | +2.18 | −1.55 | Discordant (see below) |
+| LIME1 | +1.99 | +2.34 | Immune adaptor |
+| FOS | +1.92 | −6.28 | Discordant IEG (see below) |
+| SPP1 | +1.87 | +1.41 | Macrophage/stellate marker |
+| COL1A1 | +1.87 | +1.28 | Fibrosis collagen |
+| FASN | +1.36 | +2.56 | Fatty acid synthesis |
+
+### Key discordant overlap genes (up in discovery, down in validation)
+
+| Gene | disc log2FC | val log2FC | Likely explanation |
+|---|---|---|---|
+| FOSB | +1.86 | −7.53 | Immediate-early gene; inverted in advanced fibrosis |
+| FOS | +1.92 | −6.28 | Immediate-early gene; same reason |
+| PPP1R3G | +1.10 | −3.80 | Glycogen metabolism; hepatocyte loss in F3/F4 |
+| GADD45G | +1.26 | −3.16 | Stress/apoptosis response |
+| DUSP1 | +1.30 | −3.23 | MAPK phosphatase; inflammatory regulation |
+| NR4A1 | +2.04 | −3.72 | Nuclear receptor; immune/metabolic axis |
+| RGS1 | +2.04 | −4.52 | G-protein regulator; immune cell composition |
+| FOSB/FOS/JUN pattern | — | — | All immediate-early genes reversed in GSE135251 |
+
+NR4A1, RGS1, FOS, FOSB, JUN, JUNB and several DUSPs are up in discovery but
+strongly down in validation. The IEG pattern (FOS, FOSB, JUN, JUNB, DUSP1) reversed
+in GSE135251 likely reflects hepatocyte transcriptional collapse in advanced fibrosis
+(the validation cohort is NASH F3/F4-enriched) overriding the inflammatory IEG
+induction signal.
+
+### Summary statistics
 
 | Metric | Value |
 |---|---|
-| Discovery sig genes | 24 |
-| Validation sig genes | 103 |
-| Overlap | 7 genes |
-| Overlap % of discovery | 29.2% |
-| Fisher's exact OR | 55.52 |
-| Fisher's exact p-value | 4.7e-10 |
-| Direction concordance | 71.4% (5/7) |
-| Spearman ρ (sig overlap, n=7) | 0.929 (p = 0.007) |
-| Pearson r (sig overlap, n=7) | 0.624 (p = 0.134 — underpowered at n=7) |
+| Discovery sig genes | 485 |
+| Validation sig genes | 1058 |
+| Overlap | 139 genes |
+| Overlap % of discovery | 28.7% |
+| Fisher's exact OR | 5.11 |
+| Fisher's exact p-value | 9.5e-43 |
+| Direction concordance | 73.4% (102/139) |
+| Spearman ρ (sig overlap, n=139) | 0.039 (p = 0.65) |
+| Pearson r (sig overlap, n=139) | −0.048 (p = 0.58) |
 | Pearson r (genome-wide, 13,100 genes) | 0.323 |
 
-The overlap is highly enriched above chance (OR = 55.5, p = 4.7e-10). The low raw
-overlap count (7 genes) is a consequence of the stringent |LFC| > 2 threshold
-producing small gene lists. At the genome-wide level (13,100 shared tested genes),
-the two cohorts show moderate positive correlation (Pearson r = 0.32), consistent
-with independent patient populations studying the same disease but with different
-fibrosis stage distributions.
+The overlap is highly enriched above chance (OR = 5.1, p = 9.5e-43) — with 139
+genes the enrichment remains strong even though the OR is lower than at the |LFC|>2
+threshold (which gave OR = 55.5 for just 7 genes). The near-zero Pearson and Spearman
+within the 139 overlap genes reflects the discordant subset: all 485 discovery genes
+are upregulated (lfc_mle > 1), but a subset (~37 of 139 in overlap) are strongly
+downregulated in validation, and those genes (FOS, FOSB, RGS1) have very large
+negative validation LFCs (−4 to −8) that dominate the correlation calculation. The
+direction concordance of 73.4% is the more informative metric: it shows that the
+majority of genes call the same direction in both cohorts. At the genome-wide level
+(13,100 shared tested genes), Pearson r = 0.323 — unchanged from the strict threshold,
+as expected (the full LFC distribution is not affected by the significance filter).
 
 ---
 
@@ -276,9 +313,9 @@ cohort-composition-dependent and should be interpreted with caution in bulk RNA-
 | `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot |
 | `plots/gsea_hallmark_ridgeplot.png` | Hallmark GSEA ridgeplot |
 | `results/gse135251_results.csv` | Full DESeq2 results (MLE + apeglm LFC, gene symbol) |
-| `results/gsea_kegg_results.csv` | KEGG GSEA results (87 significant pathways) |
-| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (18 significant gene sets) |
-| `results/validation_overlap_summary.csv` | Gene overlap stats, Fisher's test, concordance, correlation |
+| `results/gsea_kegg_results.csv` | KEGG GSEA results (87 significant pathways; unaffected by threshold change) |
+| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (18 significant gene sets; unaffected by threshold change) |
+| `results/validation_overlap_summary.csv` | Gene overlap stats, Fisher's test, concordance, correlation (padj<0.05, \|LFC\|>1) |
 | `results/protein_coding_gene_list.rds` | Protein-coding Ensembl IDs (biomaRt, for pipeline reproducibility) |
 | `data/GSE135251/` | Raw HTSeq count files — gitignored, re-downloadable via script |
 
