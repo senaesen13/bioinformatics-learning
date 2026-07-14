@@ -111,6 +111,11 @@ whole-liver biopsies.
 
 **139 genes significant in both cohorts** (Ensembl ID match):
 
+> **See also:** This Day 1 vs Day 2 comparison is consolidated alongside the other two
+> pairwise comparisons (Day 3 vs Day 1 and Day 3 vs Day 2) in
+> `week4-day4-nafld-cross-cohort-comparison/results/pairwise_comparison.md` (Comparison C),
+> for a single-folder view of all three cohort combinations.
+
 ### Key concordantly up-regulated overlap genes (selected)
 
 | Gene | disc log2FC | val log2FC | Notes |
