@@ -105,7 +105,7 @@ Numeric CSV: `results/pairwise_summary.csv`
 | Pearson r (sig overlap) | **0.656** | 0.510 | −0.048 |
 | Genome-wide Pearson r | **0.461** | 0.219 | 0.323 |
 
-**Conclusion: Ranking is A > C > B.** Comparison A (Day 3 vs Day 1) shows the
+**Gene-level ranking: A > C > B.** Comparison A (Day 3 vs Day 1) shows the
 strongest per-gene concordance on every metric: highest OR, direction concordance, and
 genome-wide Pearson r. Both cohorts share an early/mixed fibrosis stage distribution
 (F0–F2 dominant), which explains their tighter agreement. Comparison C (Day 1 vs Day 2)
@@ -114,6 +114,14 @@ discordance driven by Day 2's advanced-fibrosis enrichment. Comparison B (Day 3 
 Day 2) ranks last, compounded by Day 3's limited power (n=4 controls) and Day 2's
 disease-stage composition.
 
+**Pathway-level ranking: A >> B > C.** Comparison A achieves perfect concordance
+(100% of shared KEGG and Hallmark pathways call the same direction), making it
+dominant at both levels. Comparisons B and C rank differently than at gene level:
+Day 1's KEGG near-saturation (167/186 pathways significant) inflates the discordant
+pathway count in Comparison C, dropping its pathway concordance below Comparison B's.
+The one signal robust to all three pairings: MYOGENESIS and APICAL_JUNCTION are
+concordantly activated in NAFLD across all cohorts at both gene and pathway level.
+
 ---
 
 ## Output Files
@@ -121,7 +129,7 @@ disease-stage composition.
 | File | Description |
 |---|---|
 | `scripts/pairwise_comparison.R` | Comparison A + B script (loads all 3 cohorts) |
-| `results/pairwise_comparison.md` | Full report: all three comparisons + ranked conclusion |
+| `results/pairwise_comparison.md` | Full report: all three comparisons, gene-level + pathway-level, ranked conclusions |
 | `results/pairwise_summary.csv` | One row per comparison; includes Fisher's and hypergeometric p |
 | `results/lfc_corr_d3_vs_d1.png` | LFC scatter: GSE130970 vs GSE162694 (Comparison A) |
 | `results/lfc_corr_d3_vs_d2.png` | LFC scatter: GSE130970 vs GSE135251 (Comparison B) |
