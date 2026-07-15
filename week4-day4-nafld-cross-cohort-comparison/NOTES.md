@@ -1,9 +1,32 @@
 # Week 4 Day 4 — NAFLD Pairwise Cross-Cohort Comparison
 
-## Purpose
+This folder consolidates pairwise DEG overlap and pathway concordance comparisons among three
+independent NAFLD cohorts (GSE162694, GSE135251, GSE130970). The headline finding: Dataset 3
+(GSE130970, Day 3) and Dataset 1 (GSE162694, Day 1) show the strongest cross-cohort agreement at
+both the gene level (Fisher's OR 8.68, 94.7% direction concordance) and the pathway level (100%
+concordant KEGG/Hallmark pathways), consistent with their shared early/mixed fibrosis stage
+composition. Dataset 2 (GSE135251, Day 2) shows weaker concordance with both other cohorts,
+consistent with its advanced-fibrosis enrichment.
+
+---
+
+## Overview
 
 This folder is the single reference point for all pairwise comparisons among the three
-NAFLD cohorts. Three comparisons are documented here:
+NAFLD cohorts. For full dataset-specific methodology (DESeq2, filtering, GSEA) see the
+individual cohort folders:
+
+| Cohort | Folder |
+|---|---|
+| GSE162694 | `../week4-day1-nafld-bulk-rnaseq/` |
+| GSE135251 | `../week4-day2-nafld-validation-rnaseq/` |
+| GSE130970 | `../week4-day3-nafld-gse130970-rnaseq/` |
+
+---
+
+## Datasets Compared
+
+Three pairwise comparisons are documented here:
 
 - **Comparison A:** GSE130970 (Day 3) vs GSE162694 (Day 1, discovery cohort)
 - **Comparison B:** GSE130970 (Day 3) vs GSE135251 (Day 2, validation cohort)
@@ -13,15 +36,6 @@ Comparisons A and B were computed by `scripts/pairwise_comparison.R` in this fol
 Comparison C reuses numbers already computed during the Day 2 analysis
 (`week4-day2-nafld-validation-rnaseq/results/validation_overlap_summary.csv`);
 the LFC correlation plot for C is copied from that folder as `results/lfc_corr_d1_vs_d2.png`.
-
-For full dataset-specific methodology (DESeq2, filtering, GSEA) see the individual
-cohort folders:
-
-| Cohort | Folder |
-|---|---|
-| GSE162694 | `../week4-day1-nafld-bulk-rnaseq/` |
-| GSE135251 | `../week4-day2-nafld-validation-rnaseq/` |
-| GSE130970 | `../week4-day3-nafld-gse130970-rnaseq/` |
 
 ---
 
@@ -90,7 +104,7 @@ less specific measure of overall concordance.
 
 ---
 
-## Key Results (Summary)
+## Gene-Level Results
 
 Full results: `results/pairwise_comparison.md`  
 Numeric CSV: `results/pairwise_summary.csv`
@@ -114,6 +128,10 @@ discordance driven by Day 2's advanced-fibrosis enrichment. Comparison B (Day 3 
 Day 2) ranks last, compounded by Day 3's limited power (n=4 controls) and Day 2's
 disease-stage composition.
 
+---
+
+## Pathway-Level Results
+
 **Pathway-level ranking: A >> B > C.** Comparison A achieves perfect concordance
 (100% of shared KEGG and Hallmark pathways call the same direction), making it
 dominant at both levels. Comparisons B and C rank differently than at gene level:
@@ -122,22 +140,15 @@ pathway count in Comparison C, dropping its pathway concordance below Comparison
 The one signal robust to all three pairings: MYOGENESIS and APICAL_JUNCTION are
 concordantly activated in NAFLD across all cohorts at both gene and pathway level.
 
----
-
-## Output Files
-
-| File | Description |
-|---|---|
-| `scripts/pairwise_comparison.R` | Comparison A + B script (loads all 3 cohorts) |
-| `results/pairwise_comparison.md` | Full report: all three comparisons, gene-level + pathway-level, ranked conclusions |
-| `results/pairwise_summary.csv` | One row per comparison; includes Fisher's and hypergeometric p |
-| `results/lfc_corr_d3_vs_d1.png` | LFC scatter: GSE130970 vs GSE162694 (Comparison A) |
-| `results/lfc_corr_d3_vs_d2.png` | LFC scatter: GSE130970 vs GSE135251 (Comparison B) |
-| `results/lfc_corr_d1_vs_d2.png` | LFC scatter: GSE162694 vs GSE135251 (Comparison C; copied from Day 2) |
+Both gene-level and pathway-level analyses converge on Comparison A (GSE130970 vs GSE162694)
+as the most concordant pair, strengthening confidence that this signal reflects true biology
+rather than dataset-specific noise.
 
 ---
 
-## Limitations
+## Interpretation and Caveats
+
+### Important Caveats
 
 1. **Gene symbol matching noise.** Some multi-mapping gene symbols (e.g., pseudogenes
    that share a name with a protein-coding gene across annotations) may inflate or
@@ -163,3 +174,28 @@ concordantly activated in NAFLD across all cohorts at both gene and pathway leve
 5. **Comparison C is reused, not recomputed.** Numbers come from the Day 2 analysis
    script. If thresholds or filtering are ever changed in that folder, Comparison C
    in this file should be updated accordingly.
+
+---
+
+## Final Conclusion
+
+Across both gene-level and pathway-level analyses, Comparison A (GSE130970 Day 3 vs
+GSE162694 Day 1) is the strongest cross-cohort pairing: Fisher's OR 8.68, 94.7%
+direction concordance, genome-wide Pearson r 0.461, and 100% pathway-level concordance.
+The shared early/mixed fibrosis stage profile (F0–F2 dominant in both) is the most
+likely biological explanation. The one signal that holds across all three cohorts at
+both gene and pathway level — MYOGENESIS and APICAL_JUNCTION concordantly activated —
+is the most replication-robust NAFLD finding from this analysis.
+
+---
+
+## Output Files
+
+| File | Description |
+|---|---|
+| `scripts/pairwise_comparison.R` | Comparison A + B script (loads all 3 cohorts) |
+| `results/pairwise_comparison.md` | Full report: all three comparisons, gene-level + pathway-level, ranked conclusions |
+| `results/pairwise_summary.csv` | One row per comparison; includes Fisher's and hypergeometric p |
+| `results/lfc_corr_d3_vs_d1.png` | LFC scatter: GSE130970 vs GSE162694 (Comparison A) |
+| `results/lfc_corr_d3_vs_d2.png` | LFC scatter: GSE130970 vs GSE135251 (Comparison B) |
+| `results/lfc_corr_d1_vs_d2.png` | LFC scatter: GSE162694 vs GSE135251 (Comparison C; copied from Day 2) |
