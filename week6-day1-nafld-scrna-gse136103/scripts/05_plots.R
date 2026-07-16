@@ -109,6 +109,26 @@ ggsave(file.path(out, "featureplot_trem2_cd9.png"), fp3,
        width = 13, height = 6, dpi = 180)
 message("  Saved: featureplot_trem2_cd9.png")
 
+# ── 3b. FeaturePlot: TREM2 + SPP1 ────────────────────────────────────────────
+message("Plot 3b: FeaturePlot TREM2 + SPP1")
+
+fp3b <- FeaturePlot(obj, features = c("TREM2", "SPP1"),
+                    reduction = "umap", ncol = 2,
+                    pt.size = 0.15, order = TRUE,
+                    max.cutoff = "q95",
+                    cols = c("lightgrey", "#D73027")) &
+  theme_void(base_size = 11) &
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", size = 12))
+
+fp3b <- fp3b + plot_annotation(
+  title = "TREM2 and SPP1 expression on UMAP",
+  theme = theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold"))
+)
+
+ggsave(file.path(out, "featureplot_trem2_spp1.png"), fp3b,
+       width = 13, height = 6, dpi = 180)
+message("  Saved: featureplot_trem2_spp1.png")
+
 # ── 4. FeaturePlot: COL1A1 + GPNMB ───────────────────────────────────────────
 message("Plot 4: FeaturePlot COL1A1 + GPNMB")
 
