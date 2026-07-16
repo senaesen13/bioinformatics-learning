@@ -36,6 +36,8 @@ Scripts: `scripts/03_seurat_pipeline.R` (clustering) · `scripts/04_composition_
 
 ## Cell Types Found (21 clusters → 20 labels)
 
+Key plots: `plots/umap_annotated.png` · `plots/umap_healthy_vs_nafld.png`
+
 | Cluster(s) | Cell type | Key markers |
 |---|---|---|
 | 0, 3 | CD4+ T cells | CD40LG, IL7R, LTB |
@@ -63,6 +65,8 @@ Scripts: `scripts/03_seurat_pipeline.R` (clustering) · `scripts/04_composition_
 
 ## Bulk RNA-seq Genes Resolved to Cell Types
 
+Key plots: `plots/dotplot_key_genes.png` · `plots/featureplot_trem2_cd9.png` · `plots/featureplot_col1a1_gpnmb.png`
+
 Genes elevated in NAFLD across all three bulk cohorts (Week 4) are now traceable to specific cell types:
 
 | Gene | Bulk finding | scRNA cluster marker | NAFLD vs healthy DE (within cell type) |
@@ -82,7 +86,9 @@ Full DE results: `results/within_celltype_de_sig.csv` (8,913 genes, padj < 0.05 
 
 ## Cell Type Composition: Healthy vs NAFLD Cirrhosis
 
-Mean % of total cells per donor group (`results/cell_composition_major.csv`):
+Key plot: `plots/composition_barplot.png` · data: `results/cell_composition_major.csv`
+
+Mean % of total cells per donor group:
 
 | Major cell type | Healthy (n=5) | NAFLD (n=2) | Fold |
 |---|---|---|---|
@@ -137,7 +143,13 @@ scRNA-seq on this 7-donor NAFLD subset resolves the bulk signal: TREM2 and GPNMB
 | `results/within_celltype_de_all.csv` | All DE genes tested (healthy vs NAFLD), 18 cell types |
 | `results/within_celltype_de_sig.csv` | Significant DE genes only (padj < 0.05) |
 | `results/top10_de_per_celltype.csv` | Top 10 up + down per cell type |
-| `plots/umap_cell_types.png` | UMAP: annotated cell type labels |
+| `plots/umap_annotated.png` | UMAP: annotated cell types, colour-coded palette (script 05) |
+| `plots/umap_healthy_vs_nafld.png` | UMAP: split panels — healthy vs NAFLD cirrhosis (script 05) |
+| `plots/featureplot_trem2_cd9.png` | FeaturePlot: TREM2 and CD9 overlaid on UMAP (script 05) |
+| `plots/featureplot_col1a1_gpnmb.png` | FeaturePlot: COL1A1 and GPNMB overlaid on UMAP (script 05) |
+| `plots/composition_barplot.png` | Bar plot: cell type proportions, healthy vs NAFLD (script 05) |
+| `plots/dotplot_key_genes.png` | Dot plot: TREM2/SPP1/GPNMB/COL1A1 across all cell types (script 05) |
+| `plots/umap_cell_types.png` | UMAP: annotated cell type labels (script 04, earlier version) |
 | `plots/composition_stacked_by_donor.png` | Stacked bar: per-donor cell type composition |
 | `plots/composition_healthy_vs_nafld.png` | Dodged bar: mean % healthy vs NAFLD + SD |
 | `plots/nafld_genes_dotplot.png` | Dot plot: key NAFLD genes across cell types |
