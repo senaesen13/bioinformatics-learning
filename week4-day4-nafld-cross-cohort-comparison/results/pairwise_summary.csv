@@ -1,4 +1,3 @@
-"comparison","sig_genes_a","sig_genes_b","overlap","overlap_pct_of_a","universe_genes","fisher_or","fisher_p","hypergeometric_p","concordance_pct","n_overlap_pairs","pearson_r_overlap","pearson_p_overlap","spearman_rho_overlap","spearman_p_overlap","pearson_r_genomewide","n_genomewide_genes"
-"GSE130970 vs GSE162694",180,485,38,21.1,15036,8.683,8.663e-21,1.076e-20,94.7,38,0.6563,7.679e-06,0.4113,0.01082,0.4612,15036
-"GSE130970 vs GSE135251",180,1058,52,28.9,13016,4.776,1.611e-16,1.611e-16,84.6,52,0.5099,0.0001129,0.3526,0.01071,0.2192,13016
-"GSE162694 vs GSE135251",485,1058,139,28.7,13100,5.11,9.5e-43,9.451e-43,73.4,139,-0.048,0.58,0.039,0.65,0.323,13100
+"comparison","sig_genes_a","sig_genes_b","overlap","overlap_pct_of_a","universe_genes","fisher_or","fisher_p","concordance_pct","n_concordant","n_overlap_pairs","binom_p_concordance"
+"GSE130970 vs GSE162694",180,485,38,21.1,15036,8.683,8.663e-21,94.7,36,38,2.699e-09
+"GSE130970 vs GSE135251",180,1058,52,28.9,13016,4.776,1.611e-16,84.6,44,52,2.02e-07

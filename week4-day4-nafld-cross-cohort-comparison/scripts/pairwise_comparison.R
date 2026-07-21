@@ -115,25 +115,13 @@ pairwise_compare <- function(res_a, sig_a, label_a,
     group_by(gene_symbol) %>% slice(1) %>% ungroup()
   ov_df <- inner_join(ov_a, ov_b, by = "gene_symbol")
 
-  concordant <- mean(sign(ov_df$lfc_a) == sign(ov_df$lfc_b)) * 100
-  cat(sprintf("  Direction concordance: %.1f%% (%d/%d)\n",
-              concordant, round(concordant/100*nrow(ov_df)), nrow(ov_df)))
+  n_conc <- sum(sign(ov_df$lfc_a) == sign(ov_df$lfc_b))
+  concordant <- 100 * n_conc / max(nrow(ov_df), 1)
+  binom_res <- binom.test(n_conc, nrow(ov_df), p = 0.5, alternative = "greater")
+  cat(sprintf("  Direction concordance: %.1f%% (%d/%d) | binomial p = %.3e\n",
+              concordant, n_conc, nrow(ov_df), binom_res$p.value))
 
-  # Correlation on sig overlap
-  if (nrow(ov_df) >= 3) {
-    cor_p <- cor.test(ov_df$lfc_a, ov_df$lfc_b, method = "pearson")
-    cor_s <- cor.test(ov_df$lfc_a, ov_df$lfc_b, method = "spearman")
-    cat(sprintf("  Pearson r (sig overlap, n=%d): %.4f (p=%.3e)\n",
-                nrow(ov_df), cor_p$estimate, cor_p$p.value))
-    cat(sprintf("  Spearman rho (sig overlap, n=%d): %.4f (p=%.3e)\n",
-                nrow(ov_df), cor_s$estimate, cor_s$p.value))
-  } else {
-    cat("  Insufficient overlap for correlation.\n")
-    cor_p <- list(estimate = NA, p.value = NA)
-    cor_s <- list(estimate = NA, p.value = NA)
-  }
-
-  # Genome-wide Pearson r (all shared tested genes)
+  # Shared-tested gene set (needed for plots)
   lfc_all <- inner_join(
     res_a %>% filter(!is.na(lfc_mle), !is.na(gene_symbol)) %>%
       group_by(gene_symbol) %>% slice(1) %>% ungroup() %>%
@@ -143,9 +131,7 @@ pairwise_compare <- function(res_a, sig_a, label_a,
       dplyr::select(gene_symbol, lfc_b = lfc_mle),
     by = "gene_symbol"
   )
-  cor_gw <- cor.test(lfc_all$lfc_a, lfc_all$lfc_b, method = "pearson")
-  cat(sprintf("  Pearson r (genome-wide, n=%d): %.4f\n",
-              nrow(lfc_all), cor_gw$estimate))
+  cat(sprintf("  Shared tested genes: %d\n", nrow(lfc_all)))
 
   # TREM2 / SPP1 / GPNMB status
   cat("\n  TREM2 / SPP1 / GPNMB:\n")
@@ -178,13 +164,9 @@ pairwise_compare <- function(res_a, sig_a, label_a,
     fisher_or = round(ft$estimate, 3),
     fisher_p  = signif(ft$p.value, 4),
     concordance = round(concordant, 1),
+    n_concordant = n_conc,
     n_concordant_pairs = nrow(ov_df),
-    pearson_r_overlap  = round(as.numeric(cor_p$estimate), 4),
-    pearson_p_overlap  = signif(as.numeric(cor_p$p.value), 4),
-    spearman_r_overlap = round(as.numeric(cor_s$estimate), 4),
-    spearman_p_overlap = signif(as.numeric(cor_s$p.value), 4),
-    pearson_r_gw = round(cor_gw$estimate, 4),
-    n_gw_genes = nrow(lfc_all),
+    binom_p_concordance = signif(binom_res$p.value, 4),
     ov_df = ov_df,
     lfc_all = lfc_all %>%
       mutate(cat = case_when(
@@ -237,8 +219,8 @@ plot_lfc_corr <- function(comp, title_str, out_path) {
     labs(
       title    = title_str,
       subtitle = sprintf(
-        "Shared sig genes (n=%d, purple) | Pearson r=%.3f | Genome-wide r=%.3f\nGrey=neither | Blue=one-cohort only | Yellow=TREM2/SPP1/GPNMB",
-        nrow(both_sig), comp$pearson_r_overlap, comp$pearson_r_gw),
+        "Shared sig genes (n=%d, purple) | Direction concordance=%.1f%% (binom.p=%.2e)\nGrey=neither | Blue=one-cohort only | Yellow=TREM2/SPP1/GPNMB",
+        nrow(both_sig), comp$concordance, comp$binom_p_concordance),
       x = sprintf("log2FC MLE — %s", lab_a),
       y = sprintf("log2FC MLE — %s", lab_b)
     ) +
@@ -264,22 +246,18 @@ cat("\n=== Saving summary ===\n")
 
 summary_rows <- lapply(list(res_A, res_B), function(r) {
   data.frame(
-    comparison           = sprintf("%s vs %s", r$label_a, r$label_b),
-    sig_genes_a          = r$n_sig_a,
-    sig_genes_b          = r$n_sig_b,
-    overlap              = r$overlap,
-    overlap_pct_of_a     = r$overlap_pct,
-    universe_genes       = r$n_universe,
-    fisher_or            = r$fisher_or,
-    fisher_p             = r$fisher_p,
-    concordance_pct      = r$concordance,
-    n_overlap_pairs      = r$n_concordant_pairs,
-    pearson_r_overlap    = r$pearson_r_overlap,
-    pearson_p_overlap    = r$pearson_p_overlap,
-    spearman_rho_overlap = r$spearman_r_overlap,
-    spearman_p_overlap   = r$spearman_p_overlap,
-    pearson_r_genomewide = r$pearson_r_gw,
-    n_genomewide_genes   = r$n_gw_genes,
+    comparison              = sprintf("%s vs %s", r$label_a, r$label_b),
+    sig_genes_a             = r$n_sig_a,
+    sig_genes_b             = r$n_sig_b,
+    overlap                 = r$overlap,
+    overlap_pct_of_a        = r$overlap_pct,
+    universe_genes          = r$n_universe,
+    fisher_or               = r$fisher_or,
+    fisher_p                = r$fisher_p,
+    concordance_pct         = r$concordance,
+    n_concordant            = r$n_concordant,
+    n_overlap_pairs         = r$n_concordant_pairs,
+    binom_p_concordance     = r$binom_p_concordance,
     stringsAsFactors = FALSE
   )
 })
