@@ -30,6 +30,13 @@ F0 = 35 · F1 = 30 · F2 = 27 · F3 = 8 · F4 = 12 · Normal = 31
 > the new thresholds. GSEA was not re-run (it ranks all genes by LFC, not just the
 > significant subset).
 
+> **GSEA ranking update (2026-07-20):** The GSEA ranking metric was changed from
+> `lfc_apeglm` to `sign(lfc_apeglm) * -log10(pvalue_mle)`. This signed significance
+> score weights genes by both effect size direction and statistical confidence, and is
+> a more robust standard ranking approach. GSEA was re-run for KEGG and Hallmark.
+> KEGG: 164 pathways (was 167). Hallmark: 32 gene sets (was 29). See updated GSEA
+> results below.
+
 ### Step 1 — Gene Biotype Annotation (applied before count filtering)
 
 Protein-coding genes were identified using **biomaRt** `useEnsembl()` (Ensembl current via asia mirror, release ~111). For each Ensembl ID in the count matrix, `gene_biotype` was retrieved via `getBM()`. Only genes annotated as `protein_coding` were retained.
@@ -92,22 +99,55 @@ All three canonical NAFLD macrophage markers are now significant under the relax
 
 ---
 
+## GSEA Results
+
+**Method:** Genes ranked by `sign(lfc_apeglm) * -log10(pvalue_mle)` (NAFLD / Normal), descending.
+clusterProfiler `gseKEGG` (organism = "hsa") + `GSEA` with MSigDB Hallmark (H collection).
+BH-adjusted p-value cutoff < 0.05, minGSSize = 15, maxGSSize = 500.
+
+**KEGG:** 164 significant pathways
+
+| Direction | Top pathways (padj) |
+|---|---|
+| Activated in NAFLD | Rheumatoid arthritis (1.1e-08), Integrin signaling (1.1e-08), Cytoskeleton in muscle cells (1.1e-08), Phagocytosis (1.8e-08), Antigen processing and presentation (1.3e-07) |
+| Suppressed in NAFLD | Valine/leucine/isoleucine degradation (2.0e-06), Drug metabolism — CYP450 (4.5e-06), Chemical carcinogenesis — DNA adducts (5.5e-06), Biosynthesis of cofactors (1.0e-05), Steroid hormone biosynthesis (1.5e-05) |
+
+Compared to the previous lfc_apeglm ranking: immune/infection pathways (Rheumatoid arthritis, Phagocytosis, Antigen presentation) rise to the top activated set alongside ECM/Integrin signals. The suppressed set is now dominated by amino acid catabolism and xenobiotic metabolism — consistent with impaired hepatocyte metabolic function in NAFLD.
+
+**Hallmark:** 32 significant gene sets
+
+| Direction | Gene set | NES | padj |
+|---|---|---|---|
+| Activated | ALLOGRAFT_REJECTION | +2.35 | 8.3e-10 |
+| Activated | TNFA_SIGNALING_VIA_NFKB | +2.34 | 8.3e-10 |
+| Activated | EPITHELIAL_MESENCHYMAL_TRANSITION | +2.28 | 8.3e-10 |
+| Activated | APOPTOSIS | +2.10 | 8.3e-10 |
+| Activated | MYOGENESIS | +2.04 | 8.3e-10 |
+| Activated | INFLAMMATORY_RESPONSE | +1.98 | 8.3e-10 |
+| Suppressed | BILE_ACID_METABOLISM | −1.87 | 5.8e-05 |
+| Suppressed | PROTEIN_SECRETION | −1.70 | 4.4e-04 |
+| Suppressed | XENOBIOTIC_METABOLISM | −1.39 | 3.2e-03 |
+
+The direction pattern is broadly consistent with the previous ranking. ALLOGRAFT_REJECTION and APOPTOSIS rise to the top activated set (reflecting immune infiltration and hepatocyte stress). BILE_ACID_METABOLISM remains the top suppressed set, confirming impaired hepatocyte bile acid synthesis as a robust NAFLD signal.
+
+---
+
 ## Output Files
 
 | File | Description |
 |---|---|
 | `scripts/deseq2_analysis.R` | Full discovery pipeline (biotype filter → DESeq2 → plots) |
-| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, apeglm LFC ranking, plots + results |
+| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, sign(lfc_apeglm)×-log10(pvalue_mle) ranking, plots + results |
 | `plots/pca.png` | PCA of VST-normalised counts (protein-coding genes) |
 | `plots/volcano.png` | Volcano plot: MLE LFC x-axis, MLE padj colour, thresholds padj<0.05 & \|LFC\|>1, TREM2/SPP1/GPNMB labelled |
-| `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (167 pathways, padj<0.05, split by direction) |
+| `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (164 pathways, padj<0.05, split by direction) |
 | `plots/gsea_kegg_ridgeplot.png` | KEGG GSEA ridgeplot (core-enrichment LFC distributions) |
-| `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot (29 gene sets) |
+| `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot (32 gene sets) |
 | `plots/gsea_hallmark_ridgeplot.png` | Hallmark GSEA ridgeplot |
 | `results/deseq2_results.csv` | Full DESeq2 results (MLE + apeglm LFC, gene symbol) |
 | `results/significant_genes.csv` | 485 significant genes (padj<0.05, \|MLE LFC\|>1) |
-| `results/gsea_kegg_results.csv` | KEGG GSEA results (167 significant pathways) |
-| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (29 significant gene sets) |
+| `results/gsea_kegg_results.csv` | KEGG GSEA results (164 significant pathways) |
+| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (32 significant gene sets) |
 | `results/protein_coding_gene_list.rds` | 16,390 protein-coding Ensembl IDs (shared with day2 pipeline) |
 
 ---
