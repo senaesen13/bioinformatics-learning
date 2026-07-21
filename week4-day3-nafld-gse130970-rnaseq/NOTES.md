@@ -119,52 +119,58 @@ positive direction in all cohorts.
 
 ## GSEA Results
 
-**Method:** Genes ranked by apeglm-shrunken log2FC (NAFLD / Normal), descending.
+> **Ranking update (2026-07-20):** GSEA ranking metric changed from `lfc_apeglm` to
+> `sign(lfc_apeglm) * -log10(pvalue_mle)`. This is a more robust approach that weights
+> genes by both direction and statistical confidence. Results below reflect the updated
+> ranking. KEGG: 174 pathways (was 94). Hallmark: 34 gene sets (was 17).
+
+**Method:** Genes ranked by `sign(lfc_apeglm) * -log10(pvalue_mle)` (NAFLD / Normal), descending.
 Gene IDs are Entrez (native to this dataset — no Ensembl→Entrez conversion needed).
 clusterProfiler `gseKEGG` + `GSEA` with MSigDB Hallmark. BH-adjusted p < 0.05,
 minGSSize = 15, maxGSSize = 500.
 
-### KEGG: 94 significant pathways
+### KEGG: 174 significant pathways (was 94)
 
 | Direction | Top pathways (padj) |
 |---|---|
-| Activated in NAFLD | Cytoskeleton in muscle cells (1.7e-08), Motor proteins (1.7e-08), Cardiac muscle contraction (6.0e-08), Dilated cardiomyopathy (9.4e-06), Hypertrophic cardiomyopathy (4.1e-05) |
-| Suppressed in NAFLD | Tryptophan metabolism (4.2e-04), One carbon pool by folate (2.0e-03), Chemical carcinogenesis–DNA adducts (2.2e-03), Linoleic acid metabolism (2.3e-03), Xenobiotic metabolism by CYP450 (8.2e-03) |
+| Activated in NAFLD | Systemic lupus erythematosus (5.8e-09), Rheumatoid arthritis (5.8e-09), Phagocytosis (5.8e-09), Tuberculosis (5.8e-09), Herpes simplex virus 1 infection (5.8e-09) |
+| Suppressed in NAFLD | One carbon pool by folate (4.0e-04), Tryptophan metabolism (1.2e-03), Valine/leucine/isoleucine degradation (2.9e-03), Glycine/serine/threonine metabolism (1.4e-02), Linoleic acid metabolism (1.6e-02) |
 
-The top activated pathways (cardiac/muscle cytoskeleton) may appear surprising in
-a liver dataset. This signal likely reflects the transcriptional overlap between
-hepatic stellate cell activation (a core NAFLD fibrosis mechanism) and smooth
-muscle/cytoskeletal gene programmes — stellate cells upregulate myosin heavy chains,
-troponins, and actomyosin regulatory genes as they become myofibroblasts. This
-is a known confound in liver GSEA when fibrosis-stage F1/F2 samples dominate.
+**Key change from previous ranking:** The previous lfc_apeglm ranking put cardiac/muscle
+cytoskeleton pathways (Cytoskeleton in muscle cells, Motor proteins, Cardiac muscle
+contraction) at the top of activated KEGG pathways. With the signed significance score,
+these are replaced by immune/infection pathways (lupus, rheumatoid arthritis, phagocytosis,
+intracellular pathogens). This is more biologically interpretable: the cardiac/muscle
+dominance was likely an artifact of apeglm over-shrinking in the n=4 control group, where
+muscle-related genes happened to have high MLE LFC but high variance. The signed
+significance metric corrects for this by down-weighting statistically uncertain genes.
+The suppressed metabolic pathways (amino acid catabolism, folate cycle, fatty acid
+metabolism) are consistent with both rankings and represent genuine hepatic function loss.
 
-The suppressed metabolic pathways (tryptophan catabolism, folate one-carbon metabolism,
-fatty acid metabolism, xenobiotic CYP450) are genuine hepatic function signatures:
-in NAFLD, hepatocyte-specific metabolic programmes are progressively impaired.
-
-### Hallmark: 17 significant gene sets
+### Hallmark: 34 significant gene sets (was 17)
 
 | Direction | Gene set | NES | padj |
 |---|---|---|---|
-| Activated | MYOGENESIS | +2.55 | 5.0e-09 |
-| Activated | APICAL_JUNCTION | +1.94 | 6.6e-04 |
-| Activated | ALLOGRAFT_REJECTION | +1.85 | 4.0e-03 |
-| Activated | TNFA_SIGNALING_VIA_NFKB | +1.73 | 2.0e-02 |
-| Activated | INTERFERON_GAMMA_RESPONSE | +1.71 | 2.0e-02 |
-| Activated | IL6_JAK_STAT3_SIGNALING | +1.79 | 2.9e-02 |
-| Activated | APOPTOSIS | +1.73 | 3.2e-02 |
-| Activated | EPITHELIAL_MESENCHYMAL_TRANSITION | +1.63 | 3.2e-02 |
-| Activated | P53_PATHWAY | +1.61 | 3.6e-02 |
-| Activated | INTERFERON_ALPHA_RESPONSE | +1.71 | 3.8e-02 |
-| Suppressed | BILE_ACID_METABOLISM | −1.66 | 2.0e-02 |
+| Activated | ALLOGRAFT_REJECTION | +2.48 | 1.3e-09 |
+| Activated | INTERFERON_GAMMA_RESPONSE | +2.26 | 1.3e-09 |
+| Activated | MTORC1_SIGNALING | +2.16 | 1.3e-09 |
+| Activated | TNFA_SIGNALING_VIA_NFKB | +2.14 | 1.3e-09 |
+| Activated | APOPTOSIS | +2.11 | 1.3e-08 |
+| Activated | P53_PATHWAY | +1.97 | 1.2e-07 |
+| Activated | INTERFERON_ALPHA_RESPONSE | +2.14 | 5.3e-07 |
+| Activated | INFLAMMATORY_RESPONSE | +1.93 | 6.8e-07 |
+| Activated | IL6_JAK_STAT3_SIGNALING | +2.11 | 1.9e-06 |
+| Activated | EPITHELIAL_MESENCHYMAL_TRANSITION | +1.86 | 5.1e-06 |
+| Suppressed | BILE_ACID_METABOLISM | −1.41 | 2.8e-02 |
 
-**MYOGENESIS** and **APICAL_JUNCTION** are concordant with both Day 1 and Day 2
-(the only two Hallmark gene sets concordant across all three cohorts).
-**TNFA_SIGNALING_VIA_NFKB** is activated here and in Day 1, but suppressed in Day 2
-(the same discordance pattern seen between days 1 and 2).
-**BILE_ACID_METABOLISM** suppressed is a characteristic hepatocyte
-signature — bile acid synthesis genes are impaired in NAFLD and their suppression
-is a reliable marker of hepatocyte dysfunction.
+**Key change from previous ranking:** MYOGENESIS was the #1 activated gene set with
+lfc_apeglm (NES +2.55). With the signed significance score it drops out of the top 10.
+Immune activation pathways (ALLOGRAFT_REJECTION, INTERFERON_GAMMA, TNFA, INFLAMMATORY)
+are now dominant — a more coherent biological picture for NAFLD immune infiltration.
+APICAL_JUNCTION is no longer significant at padj<0.05 with the new ranking.
+**BILE_ACID_METABOLISM** suppressed remains robust across both rankings (−1.66 → −1.41),
+confirming hepatocyte bile acid synthesis impairment as the most reliable suppression
+signal in this dataset.
 
 ---
 
@@ -173,17 +179,17 @@ is a reliable marker of hepatocyte dysfunction.
 | File | Description |
 |---|---|
 | `scripts/deseq2_analysis.R` | Full pipeline: metadata → count loading → DESeq2 → plots |
-| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark (Entrez IDs, no conversion needed) |
+| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, sign(lfc_apeglm)×-log10(pvalue_mle) ranking (Entrez IDs, no conversion needed) |
 | `plots/pca.png` | PCA of VST-normalised counts (protein-coding genes) |
 | `plots/volcano.png` | Volcano plot: MLE LFC, thresholds padj<0.05 & \|LFC\|>1, TREM2/SPP1/GPNMB |
-| `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (94 pathways) |
+| `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (174 pathways) |
 | `plots/gsea_kegg_ridgeplot.png` | KEGG GSEA ridgeplot |
-| `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot (17 gene sets) |
+| `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot (34 gene sets) |
 | `plots/gsea_hallmark_ridgeplot.png` | Hallmark GSEA ridgeplot |
 | `results/gse130970_results.csv` | Full DESeq2 results (MLE + apeglm LFC, gene symbol) |
 | `results/significant_genes.csv` | 180 significant genes (padj<0.05, \|MLE LFC\|>1) |
-| `results/gsea_kegg_results.csv` | KEGG GSEA results (94 significant pathways) |
-| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (17 significant gene sets) |
+| `results/gsea_kegg_results.csv` | KEGG GSEA results (174 significant pathways) |
+| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (34 significant gene sets) |
 
 ---
 
