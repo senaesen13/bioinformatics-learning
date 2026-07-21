@@ -1,0 +1,4 @@
+"Comparison","Sig_Cohort_A","Sig_Cohort_B","Overlap_Count","Jaccard_Index","Direction_Concordance_Pct","Fisher_OddsRatio","Fisher_Pvalue","Pearson_R_Overlap","Pearson_P_Overlap","Pearson_R_GenomeWide"
+"GSE162694_D1 vs GSE135251_D2",480,1058,139,0.0994,73.38,5.18,2.993e-43,-0.0478,0.5761,0.3228
+"GSE162694_D1 vs GSE130970_D3",480,180,38,0.0611,94.74,8.716,7.696e-21,0.6563,7.679e-06,0.4633
+"GSE135251_D2 vs GSE130970_D3",1058,180,52,0.0438,84.62,4.773,1.648e-16,0.5099,0.0001129,0.2186

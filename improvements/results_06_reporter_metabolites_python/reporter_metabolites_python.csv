@@ -1,0 +1,16 @@
+Metabolite,Subsystem,Neighbor_Genes_Count,Mean_Log2FC,Z_Raw,Reporter_Z_Score,Pvalue,Neighbor_Genes
+Cholesterol,Steroid & Lipid biosynthesis,3,1.543,4.255,1.987,0.023436,HMGCR; HMGCS1; SQLE
+Alanine,Amino acid metabolism,2,-0.607,3.492,1.811,0.035071,GPT; GPT2
+Malate,TCA cycle,5,0.53,4.455,1.635,0.05104,MDH1; MDH2; ME1; ME2; ME3
+Bilirubin,Heme & Porphyrin metabolism,4,0.58,4.17,1.571,0.058109,HMOX1; HMOX2; BLVRA; UGT1A1
+Pyruvate,Glycolysis & Pyruvate metabolism,7,0.264,4.824,1.303,0.096368,PKLR; PKM; PDHA1; PDHB; LDHA; LDHB; PC
+Oleate / Monounsaturated FA,Lipid & Fatty acid metabolism,3,0.802,3.408,1.119,0.13149,SCD; FASN; PNPLA3
+Glutamate,Amino acid metabolism,9,-0.038,4.898,0.941,0.17345,GLUD1; GLUD2; GOT1; GOT2; GPT; GPT2; GLUL; GLS; GLS2
+Palmitate,Fatty acid biosynthesis & oxidation,7,0.299,4.052,0.579,0.28123,FASN; ACACA; ACACB; CPT1A; CPT2; ACADM; ACADVL
+Isocitrate,TCA cycle,7,0.105,3.856,0.437,0.33114,IDH1; IDH2; IDH3A; IDH3B; IDH3G; ACO1; ACO2
+Acetyl-CoA,Central carbon metabolism,4,0.508,2.905,0.297,0.3831,CS; ACLY; ACSS2; ACACA
+Lactate,Glycolysis & Pyruvate metabolism,3,-0.188,2.287,0.005,0.49808,LDHA; LDHB; LDHC
+Aspartate,Amino acid metabolism,3,0.007,1.256,-1.11,0.86646,GOT1; GOT2; ASNS
+Taurine,Sulfur & Amino acid metabolism,2,0.036,0.671,-1.232,0.89096,CDO1; CSAD
+Fumarate,TCA cycle,3,0.049,0.724,-1.625,0.94788,FH; SDHA; SDHB
+Succinate,TCA cycle,7,0.012,1.617,-1.919,0.97251,SUCLA2; SUCLG1; SUCLG2; SDHA; SDHB; SDHC; SDHD

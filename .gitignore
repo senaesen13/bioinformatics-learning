@@ -11,3 +11,6 @@ SRR*/
 *_series_matrix.txt.gz
 */raw_files/
 */metadata_cache.csv
+improvements/data/Human-GEM.xml
+__pycache__/
+*.pyc

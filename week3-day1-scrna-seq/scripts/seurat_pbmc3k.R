@@ -121,6 +121,40 @@ cat("  After QC:  ", ncol(pbmc), "cells\n\n")
 
 
 # =============================================================================
+# STEP 2b — Doublet removal (ADDED: publishable-scRNA best practice)
+# =============================================================================
+# Threshold-based QC (nFeature < 2500) removes only the most extreme doublets.
+# It does NOT catch doublets formed from two DIFFERENT cell types with a normal
+# combined gene count, which can create spurious "intermediate" clusters and
+# fake marker genes. scDblFinder simulates artificial doublets, embeds them
+# with the real cells, and scores each real cell by its proximity to simulated
+# doublets. This is the current scverse-recommended approach (Germain et al.,
+# 2021, F1000Research). We keep only singlets before downstream analysis.
+#
+# Install once: BiocManager::install("scDblFinder")
+# =============================================================================
+
+if (requireNamespace("scDblFinder", quietly = TRUE) &&
+    requireNamespace("SingleCellExperiment", quietly = TRUE)) {
+  cat("STEP 2b: Doublet detection (scDblFinder)...\n")
+  set.seed(42)
+  sce <- SingleCellExperiment::SingleCellExperiment(
+    assays = list(counts = Seurat::GetAssayData(pbmc, layer = "counts"))
+  )
+  sce <- scDblFinder::scDblFinder(sce)
+  pbmc$scDblFinder.class <- sce$scDblFinder.class
+  pbmc$scDblFinder.score <- sce$scDblFinder.score
+  n_doublet <- sum(pbmc$scDblFinder.class == "doublet")
+  cat("  Doublets flagged:", n_doublet, "of", ncol(pbmc), "cells\n")
+  pbmc <- subset(pbmc, subset = scDblFinder.class == "singlet")
+  cat("  After doublet removal:", ncol(pbmc), "singlets\n\n")
+} else {
+  cat("STEP 2b: scDblFinder not installed — skipping doublet removal.\n")
+  cat("  Install with BiocManager::install('scDblFinder') for publishable QC.\n\n")
+}
+
+
+# =============================================================================
 # STEP 3 — Normalisation
 # =============================================================================
 # Different cells capture different amounts of RNA due to technical variation,

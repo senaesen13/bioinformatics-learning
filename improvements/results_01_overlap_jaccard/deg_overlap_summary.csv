@@ -1,0 +1,4 @@
+"Comparison","Set_A_Size","Set_B_Size","Overlap_Count","Jaccard_Index","Overlap_Pct_Set_A","Overlap_Pct_Set_B","Fisher_OddsRatio","Fisher_Pvalue","Hypergeometric_Pvalue"
+"GSE162694_D1 vs GSE135251_D2",481,1058,139,0.0993,28.9,13.14,8.225,6.361e-65,6.361e-65
+"GSE162694_D1 vs GSE130970_D3",481,180,38,0.061,7.9,21.11,11.704,4.449e-25,4.449e-25
+"GSE135251_D2 vs GSE130970_D3",1058,180,52,0.0438,4.91,28.89,7.597,1.2e-24,1.2e-24

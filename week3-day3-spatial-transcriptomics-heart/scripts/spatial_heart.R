@@ -72,7 +72,8 @@ ggsave(file.path(out_plots, "02_qc_violin.png"), p_vln,
        width = 12, height = 4, dpi = 150)
 cat("Plot 02 saved: QC violin\n")
 
-cat("Before QC — spots:", ncol(heart), "\n")
+n_spots_before_qc <- ncol(heart)   # FIX: capture BEFORE subsetting (see qc_summary below)
+cat("Before QC — spots:", n_spots_before_qc, "\n")
 cat("nCount_Spatial range:", min(heart$nCount_Spatial), "-", max(heart$nCount_Spatial), "\n")
 cat("percent.mt range:", round(min(heart$percent.mt), 2), "-", round(max(heart$percent.mt), 2), "\n")
 
@@ -287,7 +288,11 @@ write.csv(cluster_table, file.path(out_results, "cluster_sizes.csv"), row.names 
 # QC summary
 qc_summary <- data.frame(
   metric  = c("spots_before_qc", "spots_after_qc", "n_genes", "n_clusters"),
-  value   = c(ncol(heart) + sum(heart$nCount_Spatial <= 500),
+  # FIX: use the pre-subset count captured before filtering. The old expression
+  # `ncol(heart) + sum(heart$nCount_Spatial <= 500)` ran AFTER subsetting to
+  # nCount_Spatial > 200, so it double-counted surviving spots and never counted
+  # the ones actually removed — the "before" number was wrong.
+  value   = c(n_spots_before_qc,
               ncol(heart), nrow(heart), n_clusters)
 )
 write.csv(qc_summary, file.path(out_results, "qc_summary.csv"), row.names = FALSE)

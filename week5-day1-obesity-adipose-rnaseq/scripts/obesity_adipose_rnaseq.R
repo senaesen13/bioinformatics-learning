@@ -13,9 +13,15 @@ suppressPackageStartupMessages({
   library(msigdbr)
 })
 
-BASE_DIR <- "/Users/senaesen/Desktop/bioinfo-learning/week5-day1-obesity-adipose-rnaseq"
+# FIX: reproducibility — no hardcoded absolute paths. Run this script from the
+# project root (week5-day1-obesity-adipose-rnaseq/), e.g. Rscript scripts/obesity_adipose_rnaseq.R
+# In RStudio, set the working dir to the project root first. `here::here()` is used
+# if available so the script runs on any machine.
+BASE_DIR <- if (requireNamespace("here", quietly = TRUE)) here::here() else getwd()
 RESULTS  <- file.path(BASE_DIR, "results")
 PLOTS    <- file.path(BASE_DIR, "plots")
+dir.create(RESULTS, showWarnings = FALSE, recursive = TRUE)
+dir.create(PLOTS,   showWarnings = FALSE, recursive = TRUE)
 
 ## ── Step 1: Metadata ─────────────────────────────────────────────────────────
 cat("\n=== STEP 1: Metadata ===\n")

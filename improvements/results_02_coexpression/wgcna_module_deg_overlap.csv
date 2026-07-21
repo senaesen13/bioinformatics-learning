@@ -1,0 +1,5 @@
+"Module","Module_Size","DEG_List_Size","Overlap_Count","Jaccard_Index","Hypergeometric_P","Top_Overlap_Genes"
+"ME_blue",80,481,6,0.0108,0.01261,"TREM2; SPP1; GPNMB; FABP4; FASN"
+"ME_turquoise",115,481,0,0,1,""
+"ME_brown",2,481,0,0,1,""
+"ME_grey",3,481,0,0,1,""
