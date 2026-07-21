@@ -40,9 +40,10 @@ res_df <- read.csv("results/gse135251_results.csv")
 cat("Loaded", nrow(res_df), "genes\n")
 
 res_clean <- res_df %>%
-  filter(!is.na(lfc_apeglm), !is.na(gene_symbol), gene_symbol != "")
+  filter(!is.na(lfc_apeglm), !is.na(gene_symbol), gene_symbol != "",
+         !is.na(pvalue_mle), pvalue_mle > 0)
 
-cat("Genes with valid apeglm LFC and symbol:", nrow(res_clean), "\n")
+cat("Genes with valid apeglm LFC, pvalue_mle, and symbol:", nrow(res_clean), "\n")
 
 # ============================================================
 # STEP 2 — Map to Entrez IDs (required for KEGG GSEA)
@@ -61,14 +62,15 @@ res_clean$entrez_id <- entrez_map[res_clean$ensembl_id]
 res_with_entrez <- res_clean %>% filter(!is.na(entrez_id))
 cat("Genes with Entrez ID:", nrow(res_with_entrez), "\n")
 
-# Ranked list: Entrez ID -> apeglm LFC, sorted descending, deduplicated
+# Ranked list: Entrez ID -> sign(lfc_apeglm) * -log10(pvalue_mle), sorted descending, deduplicated
 gene_list_entrez <- res_with_entrez %>%
-  arrange(desc(lfc_apeglm)) %>%
+  mutate(rank_score = sign(lfc_apeglm) * -log10(pvalue_mle)) %>%
+  arrange(desc(rank_score)) %>%
   distinct(entrez_id, .keep_all = TRUE) %>%
-  { setNames(.$lfc_apeglm, .$entrez_id) }
+  { setNames(.$rank_score, .$entrez_id) }
 
 cat("Final ranked list length:", length(gene_list_entrez), "\n")
-cat("LFC range: [", round(min(gene_list_entrez), 3),
+cat("Rank score range: [", round(min(gene_list_entrez), 3),
     ",", round(max(gene_list_entrez), 3), "]\n")
 
 # ============================================================
@@ -107,7 +109,7 @@ if (nrow(kegg_res_df) > 0) {
     p_kegg_dot <- dotplot(gsea_kegg, showCategory = n_kegg_show, split = ".sign") +
       facet_grid(~.sign) +
       ggtitle("KEGG GSEA — NAFLD vs Normal (Validation: GSE135251)",
-              subtitle = "Ranked by apeglm log2FC | padj<0.05") +
+              subtitle = "Ranked by sign(lfc_apeglm) x -log10(pvalue_mle) | padj<0.05") +
       theme_bw(base_size = 11) +
       theme(
         plot.title  = element_text(face = "bold", size = 13),
@@ -125,7 +127,7 @@ if (nrow(kegg_res_df) > 0) {
       labs(
         title    = "KEGG GSEA Ridgeplot — NAFLD vs Normal (Validation: GSE135251)",
         subtitle = "Core-enrichment gene log2FC distribution | padj<0.05",
-        x        = "log2 Fold Change (apeglm, NAFLD / Normal)"
+        x        = "sign(lfc_apeglm) x -log10(pvalue_mle)"
       ) +
       theme_bw(base_size = 11) +
       theme(
@@ -208,7 +210,7 @@ if (nrow(hallmark_res_df) > 0) {
       labs(
         title    = "Hallmark GSEA Ridgeplot — NAFLD vs Normal (Validation: GSE135251)",
         subtitle = "Core-enrichment gene log2FC distribution | padj<0.05",
-        x        = "log2 Fold Change (apeglm, NAFLD / Normal)"
+        x        = "sign(lfc_apeglm) x -log10(pvalue_mle)"
       ) +
       theme_bw(base_size = 11) +
       theme(

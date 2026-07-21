@@ -42,6 +42,12 @@ The disease status column in GEO metadata is `disease:ch1`:
 > counts, tables, and statistics below reflect the new thresholds. GSEA was not re-run
 > (it ranks all genes by LFC, not just the significant subset).
 
+> **GSEA ranking update (2026-07-20):** The GSEA ranking metric was changed from
+> `lfc_apeglm` to `sign(lfc_apeglm) * -log10(pvalue_mle)`. GSEA was re-run for KEGG
+> and Hallmark. KEGG: 66 pathways (was 87). Hallmark: 16 gene sets (was 18). The GSEA
+> Results section below reflects the new ranking. Note: the Cross-Cohort Pathway
+> Comparison section was computed with the previous ranking and has not been re-run.
+
 Identical pipeline to the discovery cohort:
 
 1. **Protein-coding filter** — applied before count filtering. Same gene list derived
@@ -183,34 +189,38 @@ as expected (the full LFC distribution is not affected by the significance filte
 
 ## GSEA Results (Validation Cohort)
 
-**Method:** Genes ranked by apeglm-shrunken log2FC (NAFLD / Normal), descending.
+**Method:** Genes ranked by `sign(lfc_apeglm) * -log10(pvalue_mle)` (NAFLD / Normal), descending.
 clusterProfiler `gseKEGG` (organism = "hsa") + `GSEA` with MSigDB Hallmark (H collection).
-Both use BH-adjusted p-value cutoff < 0.05, minGSSize = 15, maxGSSize = 500.
+BH-adjusted p-value cutoff < 0.05, minGSSize = 15, maxGSSize = 500.
 
-**KEGG:** 87 significant pathways
+**KEGG:** 66 significant pathways (was 87 with lfc_apeglm ranking)
 
 | Direction | Top pathways (padj) |
 |---|---|
-| Activated in NAFLD | ECM-receptor interaction (4.4e-04), Integrin signaling (1.6e-03), Cornified envelope formation (3.7e-03), Focal adhesion (3.9e-02), Cholesterol metabolism (3.0e-02) |
-| Suppressed in NAFLD | Ribosome (3.5e-08), Coronavirus disease (2.3e-06), IL-17 signaling (2.3e-04), Amphetamine addiction (5.3e-04), MAPK signaling (5.3e-04) |
+| Activated in NAFLD | Lysosome biogenesis (6.6e-04), Carbon metabolism (7.6e-03), Motor proteins (7.6e-03), Biosynthesis of amino acids (1.7e-02), Integrin signaling (2.6e-02) |
+| Suppressed in NAFLD | Ribosome (1.7e-08), Coronavirus disease (1.7e-08), IL-17 signaling (2.6e-02), Osteoclast differentiation (2.6e-02), FoxO signaling (3.8e-02) |
 
-Note: Several immune/inflammatory pathways (IL-17, TNF, osteoclast differentiation) are
+Note: Several immune/inflammatory pathways (IL-17, osteoclast differentiation) remain
 **suppressed** in this cohort, opposite to the discovery cohort — see cross-cohort comparison below.
 
-**Hallmark:** 18 significant gene sets
+**Hallmark:** 16 significant gene sets (was 18 with lfc_apeglm ranking)
 
 | Direction | Gene set | NES | padj |
 |---|---|---|---|
-| Activated | CHOLESTEROL_HOMEOSTASIS | +2.12 | 1.6e-05 |
-| Activated | APICAL_JUNCTION | +1.94 | 9.2e-06 |
-| Activated | MYOGENESIS | +1.68 | 3.3e-03 |
-| Activated | MTORC1_SIGNALING | +1.58 | 6.9e-03 |
-| Activated | MITOTIC_SPINDLE | +1.57 | 8.9e-03 |
-| Suppressed | TNFA_SIGNALING_VIA_NFKB | −3.04 | 5.0e-09 |
-| Suppressed | HYPOXIA | −2.13 | 8.8e-07 |
-| Suppressed | KRAS_SIGNALING_UP | −2.00 | 9.1e-06 |
-| Suppressed | UV_RESPONSE_UP | −1.75 | 1.9e-03 |
-| Suppressed | TGF_BETA_SIGNALING | −1.76 | 9.3e-03 |
+| Activated | APICAL_JUNCTION | +1.66 | 2.7e-03 |
+| Activated | MTORC1_SIGNALING | +1.60 | 3.5e-03 |
+| Activated | BILE_ACID_METABOLISM | +1.58 | 1.2e-02 |
+| Activated | MITOTIC_SPINDLE | +1.45 | 4.4e-02 |
+| Suppressed | TNFA_SIGNALING_VIA_NFKB | −2.56 | 5.0e-09 |
+| Suppressed | KRAS_SIGNALING_UP | −1.89 | 1.5e-05 |
+| Suppressed | HYPOXIA | −1.61 | 3.8e-03 |
+| Suppressed | TGF_BETA_SIGNALING | −1.61 | 4.4e-02 |
+| Suppressed | UV_RESPONSE_UP | −1.58 | 1.2e-02 |
+
+Notable change from previous ranking: **BILE_ACID_METABOLISM** switched from suppressed
+to activated (+1.58). CHOLESTEROL_HOMEOSTASIS (previously #1 activated at NES +2.12)
+drops below the padj<0.05 cutoff. TNFA_SIGNALING_VIA_NFKB remains the most strongly
+suppressed set in this cohort (NES −2.56), consistent with the previous ranking.
 
 ---
 
@@ -310,7 +320,7 @@ cohort-composition-dependent and should be interpreted with caution in bulk RNA-
 | File | Description |
 |---|---|
 | `scripts/validation_gse135251.R` | Full pipeline: download → filter → DESeq2 → cross-cohort |
-| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, apeglm LFC ranking, plots + results |
+| `scripts/gsea_analysis.R` | GSEA: KEGG + Hallmark, sign(lfc_apeglm)×-log10(pvalue_mle) ranking, plots + results |
 | `plots/validation_overlap.png` | Bar chart: discovery-only / both / validation-only gene counts |
 | `plots/lfc_correlation.png` | LFC scatter (13,100 shared genes), purple = both sig, yellow = markers |
 | `plots/gsea_kegg_dotplot.png` | KEGG GSEA dotplot (padj<0.05, split by direction) |
@@ -318,8 +328,8 @@ cohort-composition-dependent and should be interpreted with caution in bulk RNA-
 | `plots/gsea_hallmark_dotplot.png` | Hallmark GSEA dotplot |
 | `plots/gsea_hallmark_ridgeplot.png` | Hallmark GSEA ridgeplot |
 | `results/gse135251_results.csv` | Full DESeq2 results (MLE + apeglm LFC, gene symbol) |
-| `results/gsea_kegg_results.csv` | KEGG GSEA results (87 significant pathways; unaffected by threshold change) |
-| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (18 significant gene sets; unaffected by threshold change) |
+| `results/gsea_kegg_results.csv` | KEGG GSEA results (66 significant pathways; re-run with signed significance ranking) |
+| `results/gsea_hallmark_results.csv` | Hallmark GSEA results (16 significant gene sets; re-run with signed significance ranking) |
 | `results/validation_overlap_summary.csv` | Gene overlap stats, Fisher's test, concordance, correlation (padj<0.05, \|LFC\|>1) |
 | `results/protein_coding_gene_list.rds` | Protein-coding Ensembl IDs (biomaRt, for pipeline reproducibility) |
 | `data/GSE135251/` | Raw HTSeq count files — gitignored, re-downloadable via script |
