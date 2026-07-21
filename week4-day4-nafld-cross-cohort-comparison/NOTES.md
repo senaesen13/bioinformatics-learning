@@ -3,16 +3,15 @@
 This folder consolidates pairwise DEG overlap and pathway concordance comparisons among three
 independent NAFLD cohorts (GSE162694, GSE135251, GSE130970).
 
-**Primary finding (Comparison C — Day 1 vs Day 2):** The discovery cohort (GSE162694, n=143)
-replicates in the independent validation cohort (GSE135251, n=216): 139 genes overlap (3.5×
-enrichment above chance, Fisher's p 9.5e-43), 73.4% call the same direction (binomial p 1.6e-08),
-and both TREM2 (+2.48/+2.52) and SPP1 (+1.87/+1.41) are individually significant in both datasets.
+The primary comparison is **Dataset 1 vs Dataset 2 (Comparison C)**. It has the most overlapping
+genes (139), the strongest enrichment p-value (Fisher's p = 9.5e-43), and is the only pairing
+where both TREM2 and SPP1 are individually significant in both datasets. These 139 shared genes
+will be used as input for GEM and coexpression analysis going forward.
 
-Supporting finding (Comparison A — Day 3 vs Day 1): Dataset 3 (GSE130970) and Dataset 1
-(GSE162694) show the highest per-gene concordance (Fisher's OR 8.68, 94.7% direction concordance,
-100% concordant KEGG pathways), consistent with their shared early/mixed fibrosis stage composition.
-This provides supporting evidence for the biology seen in Day 1, but is not an independent
-replication.
+Dataset 3 vs Dataset 1 (Comparison A) has the highest direction agreement percentage (94.7%).
+However, it only produces 38 overlapping genes, because Dataset 3 has very few healthy controls
+(n = 4). That limits it as an input for downstream analysis. It is useful as supporting evidence
+for the biology seen in Dataset 1, but is not the primary comparison.
 
 ---
 
@@ -97,17 +96,16 @@ cross-referencing.
 
 ### Why These Metrics?
 
-**Fisher's OR** controls for the different list sizes (Day 2 with 1058 sig genes vs
-Day 3 with 180) by normalising against the universe. A high OR means the overlap is
-not explained by chance.
+**Fisher's OR** accounts for the fact that different cohorts have different numbers of
+significant genes. A high OR means the overlap is larger than chance alone would produce,
+even after adjusting for list size.
 
-**Direction concordance + binomial test** is the primary directional metric. Concordance
-answers: "do these genes move in the same direction across studies?" The binomial test
-(H0: p_concordance = 0.5) assesses whether the observed concordance rate is above what
-would be expected by chance for the observed overlap size. Pearson/Spearman correlations
-on overlap LFCs are not reported: when cohorts have very different LFC scales and include
-discordant outliers (as in Comparison C), correlation coefficients can be near zero or
-negative despite high biological concordance, making them misleading here.
+**Direction concordance** answers a simple question: do these genes go up and down in the
+same direction in both datasets? The binomial test checks whether the concordance rate is
+above 50% (what you would expect if direction were random). LFC correlation (Pearson/Spearman)
+is not reported — it can appear near zero even when most genes are concordant, because a few
+strongly discordant genes dominate the calculation. Direction concordance with a binomial test
+is the cleaner metric here.
 
 ---
 
@@ -125,13 +123,15 @@ Numeric CSV: `results/pairwise_summary.csv`
 | Direction concordance | **94.7%** | 84.6% | 73.4% |
 | Binomial p (concordance > 50%) | 2.7e-09 | 2.0e-07 | 1.6e-08 |
 
-**Primary comparison: C (Day 1 vs Day 2)** — the designed discovery-to-validation
-replication with the largest overlap (139 genes, Fisher's p 9.5e-43) and the only
-pairing where TREM2 and SPP1 are both individually significant in both datasets.
-Direction concordance of 73.4% (binomial p 1.6e-08) is lower than Comparison A
-due to IEG discordance driven by Day 2's advanced-fibrosis enrichment, but is well
-above chance. Comparison A achieves the highest per-gene concordance (OR 8.68, 94.7%)
-but reflects matched fibrosis-stage composition, not independent validation.
+Comparison C (Day 1 vs Day 2) has the largest overlap (139 genes) and the strongest
+enrichment p-value (9.5e-43). Both TREM2 and SPP1 are significant in both datasets —
+this only happens in Comparison C. The direction agreement is 73.4%, which is lower
+than Comparison A (94.7%), but the binomial test confirms it is still well above chance
+(p = 1.6e-08).
+
+Comparison A (Day 3 vs Day 1) has the highest direction concordance (94.7%) but only
+38 overlapping genes. This is because Dataset 3 has only 4 healthy controls, so it
+finds far fewer significant genes (180 total), leaving little to overlap with.
 
 ---
 
@@ -145,19 +145,20 @@ but reflects matched fibrosis-stage composition, not independent validation.
 | B: D3 vs D2 | 66% (25/38) | 3.6e-02 | 38% (5/13) | 0.87 n.s. |
 | **C: D1 vs D2** | 42% (13/31) | 0.86 n.s. | 18% (2/11) | 0.99 n.s. |
 
-Comparison A achieves perfect KEGG concordance (100%, binomial p 6.0e-36) and strong
-Hallmark concordance (81%, p 1.2e-03) — both significantly above chance. The 5
-discordant Hallmark sets in Comparison A are metabolic/cellular-machinery programmes
+Comparison A has 100% KEGG concordance because Datasets 1 and 3 come from similarly
+staged patients (both enriched for early/mixed fibrosis). The 5 discordant Hallmark sets
 (OXIDATIVE_PHOSPHORYLATION, FATTY_ACID_METABOLISM, PROTEIN_SECRETION, PEROXISOME,
-MYC_TARGETS) that are activated in Day 3 but suppressed in Day 1, reflecting Day 3's
-limited n=4 control group.
+MYC_TARGETS) are activated in Day 3 but suppressed in Day 1. This most likely reflects
+Dataset 3's n=4 control group, which is too small to give a stable metabolic baseline.
 
-Comparison C's low pathway concordance is consistent with its gene-level IEG
-discordance and does not undermine its status as the primary validation comparison.
-The 2 concordant Hallmark sets (APICAL_JUNCTION and MYOGENESIS) and the concordant
-ECM/immune KEGG pathways (Integrin signaling, ECM-receptor interaction, Focal adhesion,
-Phagocytosis) are the fibrosis-stage-independent core of the NAFLD transcriptional
-signature.
+Comparison C has lower pathway concordance (42% KEGG, 18% Hallmark). The main reason is
+that Dataset 1 is enriched for early/mid-stage NAFLD, while Dataset 2 is enriched for
+advanced-stage NAFLD. Broad pathway categories like inflammatory signalling behave
+differently at different disease stages, so they point in different directions between the
+two cohorts. Individual genes like TREM2 and SPP1 are not as sensitive to this stage
+difference — they go up consistently. The 2 pathway sets that are concordant across all
+three cohorts (APICAL_JUNCTION and MYOGENESIS) are the most fibrosis-stage-independent
+signals in this study.
 
 ---
 
@@ -174,10 +175,10 @@ signature.
    of overlap analyses in Comparisons A and B. GSEA on the full ranked list (see Day 3
    folder) is more reliable than the gene-list overlap here.
 
-3. **Cross-cohort LFC comparability.** MLE LFCs from different datasets are comparable
-   in direction and rough magnitude but not in exact value (different sample compositions,
-   batch effects, pipeline differences). Pearson r on LFC values should be treated as
-   an index of agreement, not a direct exchange rate.
+3. **Cross-cohort LFC comparability.** Log2 fold changes from different datasets are
+   comparable in direction and rough magnitude, but not in exact value. Sample composition,
+   batch effects, and pipeline differences all affect the LFC scale. Direction concordance
+   is therefore more reliable than any correlation of raw LFC values.
 
 4. **Confounding by fibrosis stage.** All three cohorts contain a mix of fibrosis
    stages, but in different proportions. The "NAFLD" label conflates early steatosis
@@ -192,26 +193,65 @@ signature.
 
 ---
 
+## Why Dataset 1 vs Dataset 2 Was Chosen
+
+Three pairwise comparisons were run. All the numbers are in the Gene-Level Results
+table above. Here is why Comparison C was chosen as the primary comparison.
+
+**Comparison A (Dataset 1 vs Dataset 3):** 94.7% direction agreement, 38 overlapping
+genes. The agreement percentage is the highest of the three. But 38 genes is a very
+small set for downstream analysis. The reason it's small is that Dataset 3 has only
+4 healthy controls, so DESeq2 can only call 180 significant genes in that dataset. That
+limits how much can overlap with the other two cohorts.
+
+**Comparison B (Dataset 2 vs Dataset 3):** 84.6% agreement, 52 overlapping genes. Also
+limited by Dataset 3's small control group.
+
+**Comparison C (Dataset 1 vs Dataset 2):** 73.4% agreement, 139 overlapping genes. The
+percentage is lower than A, but the number of overlapping genes is nearly 4× larger (139
+vs 38). The enrichment p-value is also the strongest of the three: Fisher's p = 9.5e-43.
+
+For downstream analysis like GEM construction and coexpression network analysis, the
+number of shared genes matters more than the agreement percentage. 139 genes is a
+workable input. 38 genes is not.
+
+The 73.4% concordance is also not a weakness — it is well above chance (binomial
+p = 1.6e-08). The 26.6% of genes that disagree mostly reflect a known biological
+difference: Dataset 1 contains more early/mid-stage NAFLD patients (fibrosis stage
+F0–F2), while Dataset 2 contains more advanced-stage patients (F3–F4). Some genes —
+particularly immediate-early stress-response genes like FOS and FOSB — behave
+differently at different fibrosis stages. That is a real biological finding, not noise.
+The 73.4% that do agree are genes that go up or down consistently regardless of stage.
+
+The pathway-level concordance for Dataset 1 vs Dataset 2 also looks low (42% KEGG,
+18% Hallmark). This reflects the same fibrosis-stage difference. Broad pathway
+categories (like "TNF signaling" or "IL-17 signaling") are sensitive to disease stage
+and flip direction between the two cohorts. Individual gene-level signals like TREM2
+and SPP1 are not as sensitive — they go up in both datasets. The low pathway numbers
+do not weaken the gene-level finding.
+
+Because of this, Dataset 1 vs Dataset 2's 139 shared genes will be used as the input
+for GEM and coexpression analysis going forward.
+
+---
+
 ## Final Conclusion
 
-**Primary result:** Comparison C (GSE162694 Day 1 vs GSE135251 Day 2) is the key
-finding of this analysis. TREM2 (+2.48 / +2.52 log2FC) and SPP1 (+1.87 / +1.41 log2FC)
-replicate concordantly across independent discovery and validation cohorts, each
-individually significant in both datasets. The 139-gene overlap is enriched 3.5× above
-chance (Fisher's p 9.5e-43) and 73.4% of genes call the same direction (binomial p
-1.6e-08). The IEG discordance (FOS, FOSB, NR4A1, RGS1) is a biologically meaningful
-signal of fibrosis-stage differences between cohorts, not measurement noise.
+Datasets 1 and 2 are two independent NAFLD studies. Their 139 shared significant genes
+are enriched 3.5× above what chance would predict (Fisher's p = 9.5e-43). 73.4% of
+those genes go up or down in the same direction in both datasets (binomial p = 1.6e-08).
 
-**Supporting result:** Comparison A (GSE130970 Day 3 vs GSE162694 Day 1) achieves the
-highest per-gene concordance (OR 8.68, 94.7% direction concordance, binomial p 2.7e-09)
-and 100% concordant KEGG pathways (117/117, binomial p 6.0e-36). This reflects matched
-fibrosis-stage composition (both cohorts F0/F1-dominated) and supports the biological
-robustness of the Day 1 signals. TREM2 and SPP1 show the expected positive direction in
-Day 3 even without reaching significance (n=4 controls).
+TREM2 is upregulated with log2FC +2.48 in Dataset 1 and +2.52 in Dataset 2. SPP1 is
+upregulated with log2FC +1.87 in Dataset 1 and +1.41 in Dataset 2. Both are individually
+significant in both datasets. This does not happen in any other pairing — Dataset 3 does
+not have enough statistical power to confirm either gene.
 
-The one finding that is robust to all three cohorts at both gene and pathway level:
-**MYOGENESIS and APICAL_JUNCTION** are concordantly activated in NAFLD in all three
-datasets. These are the most replication-robust NAFLD pathway signals in this study.
+Across all three datasets and all three comparisons, two pathway-level signals are
+consistent: MYOGENESIS and APICAL_JUNCTION are activated in NAFLD in every cohort.
+These are the most reproducible pathway findings in this study.
+
+The 139 shared genes from Comparison C (Dataset 1 vs Dataset 2) will be used as the
+input for GEM and coexpression analysis going forward.
 
 ---
 
