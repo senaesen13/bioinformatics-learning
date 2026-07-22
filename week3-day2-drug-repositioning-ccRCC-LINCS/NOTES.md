@@ -39,11 +39,15 @@ The data file is `TCGA_KIRC_trans_exp_TPM_1.txt` from the workshop's `Example_da
 **Goal:** find genes where high expression predicts shorter survival in ccRCC patients.
 
 **Method:**
-1. For each of the 500 genes, split patients into "high" vs "low" expression groups
-2. The cutoff is chosen optimally — every threshold between the 20th and 80th expression percentile is tested; the one giving the lowest log-rank p-value is selected
-3. Log-rank test (Kaplan-Meier): tests whether the survival curves of high-expression vs low-expression groups are significantly different
-4. Cox proportional hazards model: `coef > 0` means high expression → higher hazard of death (worse prognosis)
-5. Multiple testing correction: Benjamini-Hochberg FDR across all 500 genes
+1. For each of the 500 genes, patients are split at the **median expression** into high vs low groups — one pre-specified threshold per gene
+2. A log-rank test (Kaplan-Meier) tests whether survival curves differ between the two groups
+3. Cox proportional hazards gives the hazard ratio — HR > 1 means high expression predicts shorter survival
+4. Benjamini-Hochberg FDR correction is applied across all 500 genes
+5. A gene is called significant if BH p.adj < 0.05 and HR > 1
+
+The script also computes an optimal-cutpoint result (scanning thresholds between the 20th–80th percentile) and, where the `maxstat` package is installed, a Lausen & Schumacher corrected p-value. All three are saved in the output CSV; the median-split column is used for significance calls.
+
+**Result: 35 significant prognostic oncogenes** (median-split, BH p.adj < 0.05, HR > 1)
 
 **Why this matters:** Genes where high expression → worse survival are likely drivers of tumour aggression, not just passengers. They make better drug targets because disrupting them should improve patient outcomes.
 

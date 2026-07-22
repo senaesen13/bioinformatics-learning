@@ -53,7 +53,17 @@ have disproportionately high mitochondrial RNA relative to total RNA.
 
 Thresholds applied: `nFeature_RNA` 200–2500, `percent.mt` < 5%.
 
-**Result:** 2,700 → **2,638 cells** after QC (62 low-quality cells removed)
+**Result:** 2,700 → **2,638 cells** after threshold QC (62 low-quality cells removed)
+
+---
+
+### Step 2b — Doublet Detection
+
+Each droplet in a 10x capture is supposed to contain one cell. A small fraction contains two cells that were captured together — a doublet. These appear as cells with an unusually high gene count or an ambiguous transcriptome that blends two cell types.
+
+scDblFinder detects doublets by simulating artificial doublets in silico, embedding them alongside the real cells, and scoring each real cell by how closely it resembles a simulated doublet (Germain et al., 2021, F1000Research). Cells classified as doublets are removed before clustering and annotation.
+
+**Result:** 87 doublets identified and removed → **2,551 singlets** proceed to downstream analysis
 
 ---
 
@@ -118,7 +128,7 @@ Two sub-steps:
    Resolution 0.5 gives 9 clusters for this dataset — a good granularity for
    identifying the major PBMC cell types.
 
-**Result:** 9 clusters (sizes: 684, 481, 476, 344, 291, 162, 155, 32, 13 cells)
+**Result:** 9 clusters (sizes: 671, 465, 407, 335, 333, 159, 140, 28, 13 cells)
 
 ---
 
@@ -152,14 +162,14 @@ Clusters are labelled using canonical PBMC marker genes:
 
 | Cluster | n cells | Key markers | Cell type |
 |---------|---------|-------------|-----------|
-| 0 | 684 | IL7R+, CCR7+ | CD4+ Naive T |
-| 1 | 481 | CD14+, LYZ+, CST3+ | CD14+ Monocytes |
-| 2 | 476 | IL7R+, S100A4+ | CD4+ Memory T |
-| 3 | 344 | MS4A1+, CD79A+ | B cells |
-| 4 | 291 | CD8A+, NKG7+ | CD8+ T |
-| 5 | 162 | FCGR3A+, MS4A7+ | CD16+ Monocytes |
-| 6 | 155 | GNLY++, NKG7++ | NK cells |
-| 7 | 32 | FCER1A+, FCER1A+, CST3+ | Dendritic cells |
+| 0 | 671 | IL7R+, CCR7+ | CD4+ Naive T |
+| 1 | 465 | CD14+, LYZ+, CST3+ | CD14+ Monocytes |
+| 2 | 407 | IL7R+, S100A4+ | CD4+ Memory T |
+| 3 | 335 | MS4A1+, CD79A+ | B cells |
+| 4 | 333 | CD8A+, NKG7+ | CD8+ T |
+| 5 | 159 | FCGR3A+, MS4A7+ | CD16+ Monocytes |
+| 6 | 140 | GNLY++, NKG7++ | NK cells |
+| 7 | 28 | FCER1A+, CST3+ | Dendritic cells |
 | 8 | 13 | PPBP++ | Platelets |
 
 ---
@@ -168,16 +178,16 @@ Clusters are labelled using canonical PBMC marker genes:
 
 | Cell type | Cells | % of total |
 |-----------|-------|-----------|
-| CD4+ Naive T | 684 | 25.9% |
-| CD14+ Monocytes | 481 | 18.2% |
-| CD4+ Memory T | 476 | 18.0% |
-| B cells | 344 | 13.0% |
-| CD8+ T | 291 | 11.0% |
-| CD16+ Monocytes | 162 | 6.1% |
-| NK cells | 155 | 5.9% |
-| Dendritic cells | 32 | 1.2% |
+| CD4+ Naive T | 671 | 26.3% |
+| CD14+ Monocytes | 465 | 18.2% |
+| CD4+ Memory T | 407 | 16.0% |
+| B cells | 335 | 13.1% |
+| CD8+ T | 333 | 13.1% |
+| CD16+ Monocytes | 159 | 6.2% |
+| NK cells | 140 | 5.5% |
+| Dendritic cells | 28 | 1.1% |
 | Platelets | 13 | 0.5% |
-| **Total** | **2,638** | |
+| **Total** | **2,551** | |
 
 ---
 

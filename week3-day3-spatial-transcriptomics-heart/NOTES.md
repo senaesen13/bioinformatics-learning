@@ -31,7 +31,7 @@ Bulk RNA-seq gives one expression value per gene per sample. scRNA-seq gives one
 | Step | What it does |
 |------|-------------|
 | **1. Load** | `Read10X()` reads the count matrix; `Read10X_Image()` loads the tissue photograph and spot coordinates; combined into a Seurat object |
-| **2. QC** | Filter spots: keep nCount > 200, nFeature > 100, percent.mt < 60%. Heart tissue is naturally ~30–60% mitochondrial — a strict MT filter would remove real tissue spots |
+| **2. QC** | The total spot count is recorded before any filtering. Spots are then kept if nCount > 200, nFeature > 100, and percent.mt < 60%. Heart tissue is naturally ~30–60% mitochondrial — a strict MT threshold would remove real cardiac spots. Result: 4,247 → 4,233 spots |
 | **3. SCTransform** | Normalises UMI counts for sequencing depth differences between spots using a regularised negative binomial regression. Better than log-normalisation for spatial data |
 | **4. PCA + UMAP** | 30 PCs computed on SCT-normalised data; UMAP for 2D visualisation |
 | **5. Clustering** | KNN graph (30 PCs) → Louvain at resolution 0.5 → 7 spatial clusters |

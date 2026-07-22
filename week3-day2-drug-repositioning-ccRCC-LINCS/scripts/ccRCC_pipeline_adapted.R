@@ -35,6 +35,7 @@ scripts_dir <- "/Users/senaesen/Desktop/bioinfo-learning/week3-day2-drug-reposit
 
 source(file.path(scripts_dir, "networkson_change.R"))
 source(file.path(scripts_dir, "deg_GoTerm_clusterProfiler.R"))
+source(normalizePath(file.path(scripts_dir, "..", "..", "improvements", "km_cutpoint_corrected.R")))
 
 # Patch makeCorNet for igraph >= 2.0 (add.colnames/add.rownames were removed)
 makeCorNet <- function(corMat) {
@@ -63,69 +64,48 @@ clinical <- exp_raw[, 1:7]
 expr_mat  <- exp_raw[, 8:ncol(exp_raw)]   # patients x genes
 gene_list <- colnames(expr_mat)            # Ensembl IDs
 
-# For each gene: find optimal cutoff, run log-rank test, get Cox hazard ratio
-run_km_gene <- function(j) {
-  EXP        <- as.numeric(expr_mat[, j])
-  LivingDays <- as.numeric(clinical$LivingDays)
-  DeadInd    <- clinical$Status == "dead"
-  keep       <- !is.na(EXP) & !is.na(LivingDays)
-  EXP <- EXP[keep]; LivingDays <- LivingDays[keep]; DeadInd <- DeadInd[keep]
-
-  # Test each cutoff between 20th-80th percentile; pick the most significant
-  cutoffs <- sort(unique(EXP))
-  cutoffs <- cutoffs[cutoffs > quantile(EXP, 0.2) & cutoffs <= quantile(EXP, 0.8)]
-  if (length(cutoffs) < 2) return(NULL)
-
-  best_p <- 1; best_cutoff <- median(EXP)
-  for (co in cutoffs) {
-    group <- ifelse(EXP >= co, 1, 0)
-    if (length(unique(group)) < 2) next
-    res <- tryCatch(
-      survdiff(Surv(LivingDays, DeadInd) ~ group),
-      error = function(e) NULL)
-    if (is.null(res)) next
-    p <- pchisq(res$chisq, 1, lower.tail = FALSE)
-    if (p < best_p) { best_p <- p; best_cutoff <- co }
-  }
-
-  # Cox proportional hazards — gives hazard ratio direction
-  group  <- ifelse(EXP >= best_cutoff, 1, 0)
-  cox    <- tryCatch(coxph(Surv(LivingDays, DeadInd) ~ group), error = function(e) NULL)
-  coef   <- if (!is.null(cox)) coef(cox)[1] else NA
-
-  data.frame(gene = gene_list[j], p_logrank = best_p,
-             cutoff = best_cutoff, coef = coef, stringsAsFactors = FALSE)
+# Wrapper: calls km_gene_corrected() for gene j, adds gene name column
+run_km_gene_w <- function(j) {
+  expr   <- as.numeric(expr_mat[, j])
+  time   <- as.numeric(clinical$LivingDays)
+  status <- as.integer(clinical$Status == "dead")
+  out    <- km_gene_corrected(expr, time, status)
+  if (is.null(out)) return(NULL)
+  cbind(data.frame(gene = gene_list[j], stringsAsFactors = FALSE), out)
 }
 
 cat("Running KM for", length(gene_list), "genes...\n")
 results_list <- vector("list", length(gene_list))
 for (i in seq_along(gene_list)) {
   if (i %% 100 == 0) cat("  Progress:", i, "/", length(gene_list), "\n")
-  results_list[[i]] <- run_km_gene(i)
+  results_list[[i]] <- run_km_gene_w(i)
 }
 
-km_results          <- do.call(rbind, Filter(Negate(is.null), results_list))
-km_results$p_adj    <- p.adjust(km_results$p_logrank, method = "BH")
-km_results$symbol   <- mapIds(org.Hs.eg.db, keys = km_results$gene,
-                               keytype = "ENSEMBL", column = "SYMBOL",
-                               multiVals = "first")
+km_results        <- do.call(rbind, Filter(Negate(is.null), results_list))
+km_results$p_adj  <- p.adjust(km_results$median_p, method = "BH")
+km_results$symbol <- mapIds(org.Hs.eg.db, keys = km_results$gene,
+                             keytype = "ENSEMBL", column = "SYMBOL",
+                             multiVals = "first")
 
-n_sig <- sum(km_results$p_adj < 0.05, na.rm = TRUE)
-cat("Significant (BH p.adj < 0.05):", n_sig, "genes\n")
+n_sig_corrected  <- sum(km_results$p_adj < 0.05 &
+                          !is.na(km_results$opt_HR) & km_results$opt_HR > 1, na.rm = TRUE)
+n_sig_uncorrected <- sum(p.adjust(km_results$opt_p_uncorr, "BH") < 0.05, na.rm = TRUE)
+cat("Significant by median-split (BH p.adj < 0.05, HR > 1):", n_sig_corrected, "genes\n")
+cat("Significant by optimal-cutpoint (uncorrected, BH p.adj < 0.05):", n_sig_uncorrected, "genes\n")
 
 write.csv(km_results, file.path(out_results, "km_survival_all_genes.csv"), row.names = FALSE)
 cat("Full KM table saved: results/km_survival_all_genes.csv\n")
 
 # ── Plot 1: Volcano — hazard ratio vs significance ──────────────────────────
 km_results$sig <- !is.na(km_results$p_adj) & km_results$p_adj < 0.05 &
-                  !is.na(km_results$coef) & km_results$coef > 0
+                  !is.na(km_results$opt_HR) & km_results$opt_HR > 1
 
 label_df <- km_results %>%
   filter(sig, !is.na(symbol)) %>%
-  arrange(p_logrank) %>%
+  arrange(median_p) %>%
   head(20)
 
-p1 <- ggplot(km_results, aes(x = coef, y = -log10(p_logrank + 1e-10), color = sig)) +
+p1 <- ggplot(km_results, aes(x = log(opt_HR), y = -log10(median_p + 1e-10), color = sig)) +
   geom_point(alpha = 0.6, size = 1.8) +
   scale_color_manual(values = c("FALSE" = "grey70", "TRUE" = "red3"),
                      labels = c("Not significant", "Prognostic oncogene (p.adj<0.05)")) +
@@ -144,7 +124,7 @@ cat("Plot 1 saved: 01_km_volcano.png\n")
 # ── Plot 2: KM curves for top prognostic genes ──────────────────────────────
 top_genes <- km_results %>%
   filter(sig) %>%
-  arrange(p_logrank) %>%
+  arrange(median_p) %>%
   head(9)
 
 if (nrow(top_genes) > 0) {
@@ -152,7 +132,7 @@ if (nrow(top_genes) > 0) {
     gene   <- top_genes$gene[i]
     sym    <- ifelse(is.na(top_genes$symbol[i]), gene, top_genes$symbol[i])
     EXP    <- as.numeric(expr_mat[, which(gene_list == gene)])
-    co     <- top_genes$cutoff[i]
+    co     <- top_genes$opt_cutoff[i]
     df_km  <- data.frame(
       time   = as.numeric(clinical$LivingDays) / 365,
       status = as.integer(clinical$Status == "dead"),
@@ -312,8 +292,8 @@ cat("      same connectivity map logic — find drugs that reverse the ccRCC sig
 # Drugs with NES < 0 have their "downregulated" set enriched at the top
 # → the drug suppresses ccRCC oncogenes → repositioning candidate
 km_ranked <- km_results %>%
-  filter(!is.na(coef), !is.na(p_logrank)) %>%
-  mutate(score = -log10(p_logrank + 1e-10) * sign(coef)) %>%
+  filter(!is.na(opt_HR), !is.na(median_p)) %>%
+  mutate(score = -log10(pmax(median_p, 1e-300)) * sign(log(opt_HR))) %>%
   arrange(desc(score))
 
 km_ranked$entrez <- mapIds(org.Hs.eg.db, keys = km_ranked$gene,
@@ -411,7 +391,7 @@ load(file.path(data_dir, "siginfo_beta_yuan.Rdata"))  # loads sig_info
 
 top_symbols <- km_results %>%
   filter(sig, !is.na(symbol)) %>%
-  arrange(p_logrank) %>%
+  arrange(median_p) %>%
   head(15) %>%
   pull(symbol)
 

@@ -1,4 +1,13 @@
 "cmap_name","cell_iname","n_signatures"
+"APOH","A375",4
+"APOH","A549",4
+"APOH","HA1E",4
+"APOH","HCC515",4
+"APOH","HEPG2",4
+"APOH","HT29",4
+"APOH","MCF7",4
+"APOH","PC3",4
+"APOH","VCAP",7
 "ASNS","A375",4
 "ASNS","A549",4
 "ASNS","HA1E",4
@@ -53,12 +62,3 @@
 "NME1","MCF7",4
 "NME1","PC3",4
 "NME1","VCAP",16
-"TRIP13","A375",4
-"TRIP13","A549",4
-"TRIP13","HA1E",4
-"TRIP13","HCC515",3
-"TRIP13","HEPG2",4
-"TRIP13","HT29",4
-"TRIP13","MCF7",8
-"TRIP13","PC3",8
-"TRIP13","VCAP",7
