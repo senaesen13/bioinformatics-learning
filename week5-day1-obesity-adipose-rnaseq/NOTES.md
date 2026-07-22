@@ -25,7 +25,7 @@ Groups OBM (obese men) and OBT2D (obese T2D) were excluded to avoid confounding 
 3. **Protein-coding filter**: `org.Hs.eg.db` GENETYPE annotation via `mapIds()`.
 4. **Expression filter**: `rowMeans(counts) >= 10`.
 5. **DESeq2**: design `~ condition` (NW as reference), apeglm LFC shrinkage.
-6. **Significance**: padj < 0.01 AND |MLE log2FC| > 2.
+6. **Significance**: padj < 0.01 AND |apeglm shrunk log2FC| > 2.
 7. **GSEA**: Ranked by apeglm-shrunk log2FC; KEGG Legacy and Hallmark gene sets (msigdbr v26.1, MSigDB 2026.1).
 
 ## Gene Count Filtering
@@ -39,15 +39,22 @@ Groups OBM (obese men) and OBT2D (obese T2D) were excluded to avoid confounding 
 
 ## Differential Expression Results
 
-**Thresholds**: padj < 0.01, |MLE log2FC| > 2
+**Thresholds**: padj < 0.01, |apeglm shrunk log2FC| > 2
+
+Genes are filtered using the apeglm-shrunk fold change rather than the raw MLE estimate. For low-count genes, the MLE can be extreme and unstable; apeglm shrinks these toward zero, giving a more reliable measure of effect size. Only genes that pass both the p-value and the shrunk fold-change threshold are reported as significant.
 
 | Direction | Count |
 |-----------|-------|
-| Upregulated in OBF | 8 |
-| Downregulated in OBF | 3 |
-| Total significant | 11 |
+| Upregulated in OBF | 1 |
+| Downregulated in OBF | 1 |
+| Total significant | 2 |
 
-**Note on LFC interpretation**: With n=5 per group, apeglm aggressively shrinks extreme MLE estimates toward zero. Genes like RGS7 (MLE log2FC = −25.5) have a shrunk value near zero — they are statistically significant because the fold change is consistent across all replicates, but the MLE is inflated by near-zero counts in one group. The most biologically interpretable hit is **AZGP1** (MLE log2FC = −2.4, apeglm = −2.2, padj = 1.2×10⁻⁴), a well-characterized adipose-expressed zinc-binding protein known to decrease in obesity.
+| Gene | Ensembl ID | Shrunk log2FC | MLE log2FC | padj |
+|------|-----------|--------------|------------|------|
+| AZGP1 | ENSG00000160862 | −2.24 | −2.43 | 2.8×10⁻¹⁵ |
+| CLEC4C | ENSG00000198178 | +8.86 | +7.68 | 1.6×10⁻¹¹ |
+
+**AZGP1** (zinc-alpha-2-glycoprotein) is a well-characterised adipose-expressed protein known to promote lipid mobilisation; its downregulation in obesity is consistent with published literature. **CLEC4C** (BDCA-2) is a plasmacytoid dendritic cell marker, consistent with immune cell infiltration in obese adipose tissue.
 
 ## GSEA Highlights
 
@@ -88,7 +95,7 @@ These findings are consistent with known obesity biology in adipose tissue:
 ```
 results/
   deseq2_results_all.csv          — full DESeq2 results (16,820 genes)
-  deseq2_significant_genes.csv    — significant hits (padj<0.01, |MLE log2FC|>2)
+  deseq2_significant_genes.csv    — significant hits (padj<0.01, |apeglm log2FC|>2)
   gsea_KEGG.csv                   — full KEGG GSEA results
   gsea_Hallmark.csv               — full Hallmark GSEA results
   metadata_cache.csv              — GEO sample metadata

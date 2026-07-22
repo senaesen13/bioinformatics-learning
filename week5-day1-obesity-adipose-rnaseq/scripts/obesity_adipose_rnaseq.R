@@ -13,11 +13,11 @@ suppressPackageStartupMessages({
   library(msigdbr)
 })
 
-# FIX: reproducibility — no hardcoded absolute paths. Run this script from the
-# project root (week5-day1-obesity-adipose-rnaseq/), e.g. Rscript scripts/obesity_adipose_rnaseq.R
-# In RStudio, set the working dir to the project root first. `here::here()` is used
-# if available so the script runs on any machine.
-BASE_DIR <- if (requireNamespace("here", quietly = TRUE)) here::here() else getwd()
+# Run this script from week5-day1-obesity-adipose-rnaseq/ as:
+#   Rscript scripts/obesity_adipose_rnaseq.R
+# In RStudio: set the working directory to week5-day1-obesity-adipose-rnaseq/ first.
+# `here::here()` is not used because it resolves to the git root, not this subfolder.
+BASE_DIR <- getwd()
 RESULTS  <- file.path(BASE_DIR, "results")
 PLOTS    <- file.path(BASE_DIR, "plots")
 dir.create(RESULTS, showWarnings = FALSE, recursive = TRUE)
@@ -146,13 +146,13 @@ res_df$MLE_log2FC <- as.data.frame(res_raw)$log2FoldChange[match(res_df$gene_id,
 write.csv(res_df, file.path(RESULTS, "deseq2_results_all.csv"), row.names = FALSE)
 
 ## ── Step 7: Significant genes ────────────────────────────────────────────────
-cat("\n=== STEP 7: Significant genes (padj < 0.01, |MLE log2FC| > 2) ===\n")
+cat("\n=== STEP 7: Significant genes (padj < 0.01, |apeglm log2FC| > 2) ===\n")
 sig <- res_df %>%
-  filter(!is.na(padj), padj < 0.01, abs(MLE_log2FC) > 2) %>%
+  filter(!is.na(padj), padj < 0.01, abs(log2FoldChange) > 2) %>%
   arrange(padj)
 
-cat("Upregulated (OBF > NW):", sum(sig$MLE_log2FC > 0), "\n")
-cat("Downregulated (OBF < NW):", sum(sig$MLE_log2FC < 0), "\n")
+cat("Upregulated (OBF > NW):", sum(sig$log2FoldChange > 0), "\n")
+cat("Downregulated (OBF < NW):", sum(sig$log2FoldChange < 0), "\n")
 cat("Total significant:", nrow(sig), "\n")
 
 cat("\nTop 10 by padj:\n")
@@ -188,15 +188,15 @@ vol_df <- res_df %>%
   filter(!is.na(padj)) %>%
   mutate(
     significance = case_when(
-      padj < 0.01 & MLE_log2FC >  2 ~ "Up",
-      padj < 0.01 & MLE_log2FC < -2 ~ "Down",
-      TRUE                           ~ "NS"
+      padj < 0.01 & log2FoldChange >  2 ~ "Up",
+      padj < 0.01 & log2FoldChange < -2 ~ "Down",
+      TRUE                               ~ "NS"
     )
   )
 
 top_labels <- vol_df %>% filter(significance != "NS") %>% arrange(padj) %>% head(5)
 
-volcano_plot <- ggplot(vol_df, aes(MLE_log2FC, -log10(padj), color = significance)) +
+volcano_plot <- ggplot(vol_df, aes(log2FoldChange, -log10(padj), color = significance)) +
   geom_point(alpha = 0.4, size = 1.2) +
   geom_point(data = filter(vol_df, significance != "NS"), alpha = 0.8, size = 1.8) +
   geom_text_repel(data = top_labels, aes(label = gene_name),
@@ -206,7 +206,7 @@ volcano_plot <- ggplot(vol_df, aes(MLE_log2FC, -log10(padj), color = significanc
   scale_color_manual(values = c("Up" = "#CC3333", "Down" = "#3366CC", "NS" = "grey70")) +
   labs(
     title = "Volcano - GSE166047 NW vs OBF Subcutaneous Adipose",
-    x     = "MLE log2 Fold Change (OBF / NW)",
+    x     = "apeglm shrunk log2 Fold Change (OBF / NW)",
     y     = "-log10(padj)"
   ) +
   theme_bw(base_size = 13)
