@@ -54,14 +54,14 @@ dds <- DESeq(dds)
 res        <- results(dds, name = "dex_trt_vs_untrt", alpha = 0.05)
 res_shrunk <- lfcShrink(dds, coef = "dex_trt_vs_untrt", type = "apeglm")
 
-# lfcShrink drops the stat column, so merge it back from the raw results
+# lfcShrink drops pvalue; join it back from the raw results for GSEA ranking.
 res_df <- as.data.frame(res_shrunk) %>%
   tibble::rownames_to_column("ensembl_id") %>%
   filter(!is.na(padj)) %>%
   left_join(
     as.data.frame(res) %>%
       tibble::rownames_to_column("ensembl_id") %>%
-      dplyr::select(ensembl_id, wald_stat = stat),
+      dplyr::select(ensembl_id, pvalue_mle = pvalue),
     by = "ensembl_id"
   )
 
@@ -114,12 +114,15 @@ universe_entrez  <- res_df %>% filter(!is.na(ENTREZID)) %>% pull(ENTREZID)
 
 cat("Significant genes for ORA:", length(sig_ensembl), "\n")
 
-# For GSEA: rank ALL genes by their DESeq2 Wald statistic.
-# The stat column (LFC / SE) captures both direction and significance.
+# For GSEA: rank ALL genes by sign(apeglm LFC) × -log10(MLE pvalue).
+# sign(log2FoldChange) gives direction using the shrinkage-corrected estimate;
+# -log10(pvalue_mle) scales by statistical confidence.
+# Genes with pvalue_mle == 0 are excluded (would produce Inf).
 gsea_ranks <- res_df %>%
-  filter(!is.na(ENTREZID), !is.na(wald_stat)) %>%
-  arrange(desc(wald_stat)) %>%
-  { setNames(.$wald_stat, .$ENTREZID) }
+  filter(!is.na(ENTREZID), !is.na(log2FoldChange), !is.na(pvalue_mle), pvalue_mle > 0) %>%
+  mutate(rank_score = sign(log2FoldChange) * -log10(pvalue_mle)) %>%
+  arrange(desc(rank_score)) %>%
+  { setNames(.$rank_score, .$ENTREZID) }
 
 cat("Genes in GSEA ranked list:", length(gsea_ranks), "\n")
 
