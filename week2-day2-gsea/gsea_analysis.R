@@ -115,12 +115,11 @@ universe_entrez  <- res_df %>% filter(!is.na(ENTREZID)) %>% pull(ENTREZID)
 cat("Significant genes for ORA:", length(sig_ensembl), "\n")
 
 # For GSEA: rank ALL genes by sign(apeglm LFC) × -log10(MLE pvalue).
-# sign(log2FoldChange) gives direction using the shrinkage-corrected estimate;
-# -log10(pvalue_mle) scales by statistical confidence.
-# Genes with pvalue_mle == 0 are excluded (would produce Inf).
+# sign(log2FoldChange) gives direction; -log10(pmax(pvalue_mle, 1e-300)) scales
+# by statistical confidence. pmax floors pvalue at 1e-300 to avoid Inf.
 gsea_ranks <- res_df %>%
-  filter(!is.na(ENTREZID), !is.na(log2FoldChange), !is.na(pvalue_mle), pvalue_mle > 0) %>%
-  mutate(rank_score = sign(log2FoldChange) * -log10(pvalue_mle)) %>%
+  filter(!is.na(ENTREZID), !is.na(log2FoldChange), !is.na(pvalue_mle)) %>%
+  mutate(rank_score = sign(log2FoldChange) * -log10(pmax(pvalue_mle, 1e-300))) %>%
   arrange(desc(rank_score)) %>%
   { setNames(.$rank_score, .$ENTREZID) }
 
@@ -234,7 +233,7 @@ if (nrow(as.data.frame(ekegg)) > 0) {
 set.seed(42)   # GSEA uses permutations; set seed for reproducibility
 
 gsea_go <- gseGO(
-  geneList      = gsea_ranks,     # named vector: Entrez ID → Wald stat
+  geneList      = gsea_ranks,     # named vector: Entrez ID → rank score
   OrgDb         = org.Hs.eg.db,
   keyType       = "ENTREZID",
   ont           = "BP",
@@ -312,6 +311,20 @@ write.csv(as.data.frame(ego),       "results/go_ora_results.csv",   row.names = 
 write.csv(as.data.frame(ekegg),     "results/kegg_ora_results.csv", row.names = FALSE)
 write.csv(as.data.frame(gsea_go),   "results/go_gsea_results.csv",  row.names = FALSE)
 write.csv(as.data.frame(gsea_kegg), "results/kegg_gsea_results.csv",row.names = FALSE)
+
+# GSEA Desktop rank file (.rnk): gene symbol + rank score, one row per gene
+rnk_df <- res_df %>%
+  filter(!is.na(SYMBOL), !is.na(log2FoldChange), !is.na(pvalue_mle)) %>%
+  mutate(rank_score = sign(log2FoldChange) * -log10(pmax(pvalue_mle, 1e-300))) %>%
+  group_by(SYMBOL) %>%
+  slice_max(order_by = abs(rank_score), n = 1, with_ties = FALSE) %>%
+  ungroup() %>%
+  arrange(desc(rank_score)) %>%
+  dplyr::select(SYMBOL, rank_score)
+
+write.table(rnk_df, "results/gsea_ranked_genes.rnk",
+            sep = "\t", row.names = FALSE, col.names = FALSE, quote = FALSE)
+cat("GSEA rank file saved: results/gsea_ranked_genes.rnk\n")
 
 cat("\n--- Summary ---\n")
 cat("GO ORA  terms:     ", nrow(as.data.frame(ego)),       "\n")

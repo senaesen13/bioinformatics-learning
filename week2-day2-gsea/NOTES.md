@@ -117,18 +117,13 @@ genes you couldn't detect shouldn't count as "not enriched".
 
 ```r
 gsea_ranks <- res_df %>%
-  filter(!is.na(ENTREZID), !is.na(log2FoldChange), !is.na(pvalue_mle), pvalue_mle > 0) %>%
-  mutate(rank_score = sign(log2FoldChange) * -log10(pvalue_mle)) %>%
+  filter(!is.na(ENTREZID), !is.na(log2FoldChange), !is.na(pvalue_mle)) %>%
+  mutate(rank_score = sign(log2FoldChange) * -log10(pmax(pvalue_mle, 1e-300))) %>%
   arrange(desc(rank_score)) %>%
   { setNames(.$rank_score, .$ENTREZID) }
 ```
 
-We rank by **sign(apeglm LFC) × -log10(MLE pvalue)**:
-- `sign(log2FoldChange)` gives the direction using the shrinkage-corrected (apeglm) estimate — more reliable than raw MLE for low-count genes
-- `-log10(pvalue_mle)` scales by statistical confidence, placing the most significant genes at the extremes
-- Genes where `pvalue_mle == 0` are excluded (would produce Inf)
-
-Positive scores → upregulated in treated. Negative → downregulated.
+Genes are ranked by `sign(log2FoldChange) * -log10(pmax(pvalue_mle, 1e-300))`. The sign gives direction (positive = upregulated, negative = downregulated); `-log10(pvalue)` gives weight to statistically confident changes. `pmax(..., 1e-300)` prevents infinite scores for genes with extremely small p-values.
 
 ---
 
@@ -370,27 +365,9 @@ consistent with dexamethasone's known mechanism.
 
 ---
 
-## Ranking Method Revision
+## GSEA Ranking Method
 
-**What was the problem:**
-The original script ranked genes for GSEA using the DESeq2 Wald statistic (`LFC / SE`). This is a reasonable choice, but it is not robust for low-count genes: a gene with a tiny standard error (e.g. near-zero counts) can get an artificially large Wald stat regardless of its actual fold change. More importantly, the rest of this project (Weeks 4–6) standardised on a different formula before this tutorial was revisited.
-
-**What changed:**
-The ranking was switched from `wald_stat` to `sign(log2FoldChange) * -log10(pvalue_mle)`, where:
-- `log2FoldChange` is the apeglm-shrunk LFC — shrinkage pulls noisy, low-count estimates toward zero, so the direction is more reliable
-- `pvalue_mle` is the Wald test p-value from the MLE (unshrunk) results — joined back from `res` because `lfcShrink()` drops it
-
-The merge in Section 2 was updated accordingly: `wald_stat = stat` → `pvalue_mle = pvalue`.
-
-**Why the results changed:**
-GSEA hit counts dropped substantially: GO GSEA 836 → 397, KEGG GSEA 108 → 38. This is because:
-- The Wald statistic is aggressive: genes with very small SE get extremely high/low Wald stats even if the biological effect is modest, creating a sharply polarised ranked list that many pathways can "surf"
-- `sign(LFC) × -log10(p)` is more conservative — only genes with both a strong direction (after shrinkage) and a low p-value rank at the extremes
-
-The narrower GSEA result set is the more defensible one. ORA results (which don't use the ranking) were unchanged.
-
-**Consistency:**
-This formula matches `sign(lfc_apeglm) * -log10(pvalue_mle)` used in Week 4 Day 3 (GSE130970) and subsequent NAFLD analyses.
+Genes are ranked using `sign(log2FoldChange) * -log10(pvalue)`, which combines direction and statistical confidence into a single score. Genes that go up get a positive score, genes that go down get a negative score, and the magnitude reflects how statistically confident we are in that change. The p-value is floored at 1e-300 before taking the log to prevent infinite scores.
 
 ---
 
