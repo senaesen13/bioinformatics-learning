@@ -83,6 +83,15 @@ biological context but are secondary to the main discovery-validation design.
 | SPP1 | +0.18 | 8.97e-01 | NO | +1.87 | 1.10e-07 | YES | Same direction; below LFC threshold in Day 3 |
 | GPNMB | +0.30 | 6.05e-01 | NO | +1.19 | 2.25e-09 | YES | Same direction; below threshold in Day 3 |
 
+### CD68 / FABP4 / FASN / PNPLA3
+
+| Gene | GSE130970 log2FC | GSE130970 padj | GSE130970 sig | GSE162694 log2FC | GSE162694 padj | GSE162694 sig | Match |
+|---|---|---|---|---|---|---|---|
+| CD68 | +0.47 | 2.54e-01 | NO | +0.73 | 1.04e-02 | NO | Concordant direction; below LFC threshold in both cohorts |
+| FABP4 | +1.03 | 3.47e-01 | NO | +2.17 | 1.79e-09 | YES | Concordant direction; not sig in Day 3 (n=4 controls) |
+| FASN | +1.09 | 6.70e-02 | NO | +1.36 | 1.38e-06 | YES | Concordant direction; padj just misses cutoff in Day 3 |
+| PNPLA3 | +0.24 | 6.07e-01 | NO | +0.04 | 7.98e-01 | NO | Concordant direction; not sig in either |
+
 ### LFC Correlation Plot
 
 See `results/lfc_corr_d3_vs_d1.png`
@@ -120,6 +129,15 @@ See `results/lfc_corr_d3_vs_d1.png`
 | TREM2 | +1.51 | 1.40e-01 | NO | +2.52 | 2.22e-07 | YES | Concordant direction; not sig in Day 3 |
 | SPP1 | +0.18 | 8.97e-01 | NO | +1.41 | 2.76e-03 | YES | Concordant direction; below threshold in Day 3 |
 | GPNMB | +0.30 | 6.05e-01 | NO | +0.91 | 6.00e-03 | NO | Concordant direction; below threshold in both |
+
+### CD68 / FABP4 / FASN / PNPLA3
+
+| Gene | GSE130970 log2FC | GSE130970 padj | GSE130970 sig | GSE135251 log2FC | GSE135251 padj | GSE135251 sig | Match |
+|---|---|---|---|---|---|---|---|
+| CD68 | +0.47 | 2.54e-01 | NO | n/d | n/d | n/d | CD68 absent from GSE135251 results (below count filter) |
+| FABP4 | +1.03 | 3.47e-01 | NO | +1.06 | 5.05e-02 | NO | Concordant direction; padj just above 0.05 in Day 2 |
+| FASN | +1.09 | 6.70e-02 | NO | +2.56 | 1.78e-13 | YES | Concordant direction; not sig in Day 3 (n=4 controls) |
+| PNPLA3 | +0.24 | 6.07e-01 | NO | +1.22 | 5.13e-08 | YES | Concordant direction; below threshold in Day 3 |
 
 ### LFC Correlation Plot
 
@@ -181,6 +199,15 @@ TREM2 and SPP1 replicate across the two largest, best-powered cohorts. This is t
 pairwise comparison where both markers are individually significant in both datasets.
 GPNMB is significant in Day 1 but just misses the LFC > 1 threshold in Day 2 (+0.91),
 consistent with bulk RNA-seq dilution of the macrophage/stellate cell signal.
+
+### CD68 / FABP4 / FASN / PNPLA3
+
+| Gene | GSE162694 log2FC | GSE162694 padj | GSE162694 sig | GSE135251 log2FC | GSE135251 padj | GSE135251 sig | Match |
+|---|---|---|---|---|---|---|---|
+| CD68 | +0.73 | 1.04e-02 | NO | n/d | n/d | n/d | Sig by padj in Day 1 but below LFC threshold; absent from GSE135251 (filtered) |
+| FABP4 | +2.17 | 1.79e-09 | YES | +1.06 | 5.05e-02 | NO | Concordant direction; padj just above 0.05 in Day 2 |
+| FASN | +1.36 | 1.38e-06 | YES | +2.56 | 1.78e-13 | YES | **Concordant — sig in both** |
+| PNPLA3 | +0.04 | 7.98e-01 | NO | +1.22 | 5.13e-08 | YES | Concordant direction; near-zero LFC in Day 1, sig in Day 2 only |
 
 ### LFC Correlation Plot
 
@@ -270,6 +297,20 @@ introduces IEG/inflammatory discordance not present when comparing Day 3 with Da
 > positive trend in Day 3 despite failing to reach significance there given n=4 controls.
 > This three-cohort directional consistency is the strongest available evidence for
 > TREM2 and SPP1 as robust NAFLD transcriptional markers in bulk liver RNA-seq.
+
+> **Additional markers (CD68, FABP4, FASN, PNPLA3):** Of the four additional markers
+> tracked, **FASN** is the only one consistently significant across both well-powered
+> cohorts: upregulated in Day 1 (+1.36 log2FC, padj 1.38e-06) and Day 2 (+2.56 log2FC,
+> padj 1.78e-13), with a concordant trend in Day 3 (+1.09) that just misses significance
+> given n=4 controls. FASN is the closest of the four to replicating the TREM2/SPP1
+> pattern. FABP4 is significant in Day 1 (+2.17, padj 1.79e-09) and directionally
+> consistent across all three cohorts but narrowly misses significance in Day 2
+> (padj 0.0505). PNPLA3 is significant only in Day 2 (+1.22, padj 5.13e-08); its
+> near-zero LFC in Day 1 (+0.04) indicates the signal does not replicate across cohorts.
+> CD68 does not meet the dual significance threshold in any cohort: below the LFC > 1
+> cutoff in Day 1 (padj 0.010 but LFC +0.73) and Day 3 (LFC +0.47, padj 0.25), and
+> absent from Day 2 results after low-count filtering. None of the four reach the
+> cross-cohort replication standard set by TREM2 and SPP1; FASN comes closest.
 
 ---
 
