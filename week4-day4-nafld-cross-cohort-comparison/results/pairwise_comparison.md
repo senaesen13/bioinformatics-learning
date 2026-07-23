@@ -33,6 +33,7 @@ biological context but are secondary to the main discovery-validation design.
 |---|---|---|---|
 | Overlap genes | 38 | 52 | **139** |
 | Overlap % of smaller list | 21.1% | 21.1% | **28.7%** |
+| Jaccard Index | 0.061 | 0.044 | **0.099** |
 | Universe (shared tested genes) | 15,036 | 13,016 | 13,100 |
 | Fisher's OR | **8.68** | 4.78 | 5.11 |
 | Fisher's p | 8.7e-21 | 1.6e-16 | **9.5e-43** |
@@ -48,6 +49,16 @@ biological context but are secondary to the main discovery-validation design.
 > hypergeometric test are mathematically equivalent for enrichment testing. The small
 > differences above (e.g. 8.7e-21 vs 1.1e-20 for Comparison A) are due to rounding in
 > reported digits only. Both confirm the same conclusion at every comparison.
+
+> **Jaccard Index vs Fisher's OR ranking:** Jaccard ranks C > A > B (0.099 > 0.061 >
+> 0.044), while Fisher's OR ranks A > C > B (8.68 > 5.11 > 4.78). Both agree B is
+> weakest. The C vs A disagreement reflects what each metric measures: Jaccard captures
+> raw list similarity — C wins because D1 and D2 have larger significant gene lists,
+> yielding more absolute overlap. Fisher's OR captures enrichment above chance — A wins
+> because 38 genes overlapping from lists of 180 and 485 is more surprising relative to
+> the universe than C's 139 from lists of 485 and 1058. Use OR for enrichment
+> significance; use Jaccard for raw similarity between gene lists. See
+> `results/jaccard_bar.png`.
 
 ---
 
