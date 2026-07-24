@@ -132,3 +132,116 @@ data would give much tighter co-regulation.
 | `results/correlation_matrix.csv` | 139 × 139 Pearson correlation matrix |
 | `results/module_assignments.csv` | Gene → module mapping (k = 7) |
 | `plots/coexpression_heatmap.png` | Correlation heatmap, genes ordered by module |
+
+---
+
+## WGCNA Analysis
+
+A second coexpression analysis was run on the same 139 genes using WGCNA-style methods:
+soft-thresholding, Topological Overlap Matrix (TOM), and hierarchical clustering.
+The script is `scripts/wgcna_coexpression.R`.
+
+### Method
+
+**Soft-thresholding power selection.** WGCNA converts the Pearson correlation matrix
+into a weighted adjacency matrix using a power transformation: adjacency = |correlation|^β.
+Higher β values suppress weak correlations (making the network sparser) while keeping
+strong ones. The choice of β is made by testing a range of values (β = 1–20) and
+selecting the first one where the network's connectivity distribution fits a scale-free
+model (R² ≥ 0.80). β = 10 was selected (R² = 0.824, mean connectivity = 1.71).
+
+**Topological Overlap Matrix (TOM).** TOM adjusts the adjacency between two genes by
+how many neighbours they share. Two genes that are each connected to many of the same
+genes get a higher TOM value than two genes that are directly correlated but have no
+shared neighbours. This makes modules more robust to noise. Distance = 1 − TOM.
+
+**Hierarchical clustering + silhouette.** Genes are clustered on the TOM distance matrix
+(average linkage). The number of modules k was chosen by silhouette analysis (k = 2–8
+tested). Module colours follow the standard WGCNA naming convention (largest module →
+turquoise, then blue, brown, yellow, etc.).
+
+**Module eigengenes.** For each module, the first principal component of the module's
+expression matrix is computed across the 143 samples. This gives one number per sample
+per module — a summary of how active that module is in each patient. A positive
+eigengene value means the module is expressed above its average; negative means below.
+
+---
+
+### Results
+
+**β = 10 was selected.** Below β = 10 the scale-free R² is too low (0.56 at β = 6;
+the network does not behave like a scale-free graph until the power is high enough to
+suppress weak correlations). At β = 10, mean connectivity drops to 1.71.
+
+**131 of 139 genes collapse into one module (ME_turquoise).** The other 7 modules
+are isolated outliers — one or two genes each. This is a genuine biological finding,
+not a technical problem.
+
+The reason this happens: these 139 genes are all significantly upregulated in NAFLD
+in two independent cohorts. As a group, they are broadly co-regulated — they tend to
+go up and down together across patients because they all respond to the same disease
+process. At β = 10, the adjacency values between most gene pairs become very small,
+the TOM matrix compresses most pairwise distances toward 1.0, and the clustering finds
+no meaningful boundaries to cut. The silhouette scores at all k values are uniformly
+flat and close to zero (0.017–0.018), confirming there is no strong cluster structure
+in the TOM space.
+
+**Key gene placements:**
+
+| Gene | WGCNA module | In 139-gene overlap |
+|---|---|---|
+| TREM2 | ME_turquoise | Yes |
+| SPP1 | ME_turquoise | Yes |
+| FASN | ME_turquoise | Yes |
+| COL1A1 | ME_turquoise | Yes |
+| GPNMB | — | No (significant in Day 1 only) |
+| FABP4 | — | No (significant in Day 1 only) |
+| CD68 | — | No (filtered in Day 2) |
+
+All four genes that were in the 139-gene overlap fall into the same module
+(ME_turquoise), alongside 127 other genes.
+
+---
+
+### Comparison with the Original M1/M2 Result
+
+The original analysis (Pearson correlation + hierarchical clustering, k = 7 by
+silhouette) found two main modules: M1 (62 genes, ECM/fibrosis) and M2 (70 genes,
+macrophage/immune). TREM2 and SPP1 were in M2; COL1A1 and FASN were in M1.
+
+The WGCNA analysis does not reproduce the M1/M2 split:
+
+| Original module | Genes | Where they go in WGCNA |
+|---|---|---|
+| M1 (62 genes) | 61 → ME_turquoise, 1 → ME_brown | Merged |
+| M2 (70 genes) | 70 → ME_turquoise | Merged |
+
+Both original modules merge completely into ME_turquoise. The WGCNA result says that,
+in the TOM sense, there are no tight sub-communities within the 139 genes. The M1/M2
+distinction from simple Pearson clustering reflects a softer gradient — genes at one
+end of the first PC of the full 139-gene expression matrix (COL1A1-like) versus genes
+at the other end (TREM2-like) — rather than a network-theoretic module boundary.
+
+**Which result is more informative?** They answer different questions. The original
+M1/M2 result describes what the main axes of variation look like within this gene set.
+The WGCNA result describes whether there are self-contained regulatory communities.
+The answer from WGCNA is: no, these 139 genes form one broad co-regulated program.
+The fibrosis and macrophage signals captured by M1/M2 are real biology, but they are
+not separate gene modules — they are partially overlapping responses to the same
+disease environment, viewed from different cellular compartments (stellate cells vs
+macrophages) within the bulk liver biopsy.
+
+---
+
+## Output Files (WGCNA)
+
+| File | Description |
+|---|---|
+| `scripts/wgcna_coexpression.R` | WGCNA pipeline script |
+| `results/wgcna_soft_threshold.csv` | Scale-free R² and mean connectivity for β = 1–20 |
+| `results/wgcna_gene_modules.csv` | Gene → WGCNA module + kWithin (intramodular connectivity) |
+| `results/wgcna_module_eigengenes.csv` | Module eigengenes (modules × 143 samples) |
+| `results/wgcna_vs_old_comparison.csv` | Gene-level comparison: WGCNA modules vs M1/M2 |
+| `results/wgcna_key_gene_assignments.csv` | Module assignments for TREM2, SPP1, FASN, COL1A1 |
+| `plots/wgcna_soft_threshold.png` | Scale-free R² vs β plot |
+| `plots/wgcna_dendrogram_modules.png` | Gene dendrogram + module color bar |

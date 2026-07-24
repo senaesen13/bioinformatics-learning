@@ -1,0 +1,8 @@
+"gene","wgcna_module","in_overlap","kWithin"
+"TREM2","ME_turquoise",TRUE,0.22
+"SPP1","ME_turquoise",TRUE,0.15
+"GPNMB",NA,FALSE,NA
+"FASN","ME_turquoise",TRUE,1.55
+"FABP4",NA,FALSE,NA
+"CD68",NA,FALSE,NA
+"COL1A1","ME_turquoise",TRUE,2.12
