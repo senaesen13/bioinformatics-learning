@@ -1,0 +1,4 @@
+"comparison","nafld_sig_n","obesity_sig_n","overlap_n","union_n","jaccard","fisher_or","fisher_p"
+"139-gene NAFLD vs Obesity",139,2,0,141,0,0,1
+"D1 (485) vs Obesity",481,2,0,483,0,0,1
+"D2 (1058) vs Obesity",1058,2,0,1060,0,0,1
