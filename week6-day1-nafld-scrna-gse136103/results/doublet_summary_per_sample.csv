@@ -1,0 +1,16 @@
+"gsm_id","donor","group","fraction","total","dbl_n","dbl_pct"
+"GSM4041168","Cirrhotic4","Cirrhotic liver","CD45pos",4504,298,6.62
+"GSM4041153","Healthy2","Healthy liver","CD45pos",6465,406,6.28
+"GSM4041154","Healthy2","Healthy liver","CD45neg",4190,239,5.7
+"GSM4041160","Healthy5","Healthy liver","CD45pos",4565,257,5.63
+"GSM4041158","Healthy4","Healthy liver","CD45pos",4083,186,4.56
+"GSM4041150","Healthy1","Healthy liver","CD45pos",1416,55,3.88
+"GSM4041155","Healthy3","Healthy liver","CD45pos",2432,83,3.41
+"GSM4041161","Cirrhotic1","Cirrhotic liver","CD45pos",1586,49,3.09
+"GSM4041151","Healthy1","Healthy liver","CD45neg",413,12,2.91
+"GSM4041152","Healthy1","Healthy liver","CD45neg",110,3,2.73
+"GSM4041163","Cirrhotic1","Cirrhotic liver","CD45neg",663,17,2.56
+"GSM4041162","Cirrhotic1","Cirrhotic liver","CD45neg",665,11,1.65
+"GSM4041159","Healthy4","Healthy liver","CD45neg",1770,24,1.36
+"GSM4041156","Healthy3","Healthy liver","CD45neg",1648,22,1.33
+"GSM4041157","Healthy3","Healthy liver","CD45neg",540,1,0.19

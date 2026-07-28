@@ -1,0 +1,4 @@
+"gene","top_cluster","top_celltype","avg_log2FC","original_celltype"
+"TREM2",NA,"below min.pct threshold",NA,"Monocytes + Kupffer cells (within-celltype DE; not a FindAllMarkers hit — below min.pct=0.25)"
+"SPP1","13","Hepatocytes",6.297,"Hepatocytes (cluster 13 marker log2FC 6.24)"
+"COL1A1","10","Hepatic stellate cells",7.896,"Hepatic stellate cells (cluster 12 marker log2FC 7.89)"
