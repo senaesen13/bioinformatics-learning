@@ -1,0 +1,7 @@
+No,Category,Metabolite,Control_Mean,Control_SD,NAFL_Mean,NAFL_SD,NASH_Mean,NASH_SD,Normalized_NAFL,Normalized_NASH,Pval_Control_vs_NAFL,Pval_Control_vs_NASH,Pval_NAFL_vs_NASH,Pval_Kruskal_Wallis,Qval_FDR,min_mean,FDR_recomputed,FDR_paper
+17,Amino acids,Glutamic acid,6.52,2.47,12.74,6.45,15.88,6.36,1.95,2.43,0.001,0.001,0.011,0.001,0.001,6.52,0.015799999999999998,0.001
+53,Organic acids,a-Ketoglutaric acid,1.7,0.56,2.63,1.32,3.71,1.85,1.54,2.18,0.002,0.001,0.033,0.001,0.004,1.7,0.015799999999999998,0.004
+60,Fatty acids,Myristoleic acid,0.13,0.08,0.22,0.15,0.31,0.19,1.74,2.5,0.002,0.001,0.085,0.001,0.004,0.13,0.015799999999999998,0.004
+19,Amino acids,Tyrosine,20.15,9.59,28.21,18.65,32.41,19.79,1.4,1.61,0.003,0.001,0.261,0.001,0.015,20.15,0.015799999999999998,0.015
+37,Kynurenine pathway metabolites and nucleosides,Kynurenic acid,0.005,0.006,0.01,0.009,0.009,0.006,1.88,1.7,0.001,0.007,0.74,0.001,0.015,0.005,0.015799999999999998,0.015
+61,Fatty acids,Palmitoleic acid,3.26,1.87,5.53,3.97,7.18,5.16,1.69,2.2,0.009,0.001,0.268,0.004,0.048,3.26,0.05266666666666667,0.048
