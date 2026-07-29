@@ -26,7 +26,7 @@ QC asks: is the data clean enough to analyse? You check for missing values (gaps
 **What was found:**
 - **Missing values:** None. All 79 metabolites have complete summary statistics for all three groups.
 - **Group sizes:** Cannot be verified from a summary table (it has no per-patient rows). The paper states Control=25, NAFL=42, NASH=19 (total=86).
-- **Aspartic acid outlier:** The NASH group shows mean=43.18 µg/uL but SD=80.63 µg/uL — an SD nearly double the mean, which is a strong signal of an extreme value in the raw data. The paper itself noted one NASH patient had an aspartic acid level of ~382.4 µg/uL (roughly 9× the group mean). **Decision: retain the outlier.** The paper retained it and used Kruskal-Wallis, which is rank-based and far less sensitive to outliers than a t-test or ANOVA.
+- **Aspartic acid outlier:** The NASH group shows mean=43.18 µg/uL but SD=80.63 µg/uL — an SD nearly double the mean, which is a strong signal of an extreme value in the raw data. The paper confirmed one NASH patient had an aspartic acid level of ~382.4 µg/uL. **The paper's precise handling:** this outlier sample was retained for the Kruskal-Wallis group comparisons (Kruskal-Wallis is rank-based and robust to it), but was excluded before building the machine learning classification models. After exclusion, the mean and median aspartic acid level across the 60 combined NAFLD patients (NAFL + NASH together) were 25.4 µg/uL and 16.9 µg/uL respectively.
 - **Zero/negative values:** None. All group means are positive, so a log-transform is mathematically safe at the summary level. The smallest means (1-methyladenosine at 0.002 µg/uL, kynurenic acid at 0.005) are very small but positive.
 
 ---
@@ -102,7 +102,7 @@ Kruskal-Wallis tests one metabolite at a time. PLS-DA (Partial Least Squares Dis
 **What was found:**  
 PLS-DA requires a matrix of individual patient measurements (86 patients × 79 metabolites). That matrix is not in the CSV file. Simulating individual data from group means and SDs would be misleading because it ignores correlations between metabolites — the covariance structure is what drives PLS-DA separation, and we cannot recover it from summary statistics. The step is described here to explain what the paper did and why, but it cannot be reproduced without the raw data.
 
-The paper reported that the same 6 FDR-significant metabolites all had VIP > 1.0 in their PLS-DA, confirming that the univariate and multivariate analyses identified the same key metabolites.
+**The published study's own PLS-DA results, reported here since they cannot be independently recomputed from the summary table:** The paper's model achieved R² = 0.753 (the model explained 75.3% of the variance in group membership) and Q² = 0.341 (a cross-validation metric — Q² above 0.4 is generally considered a strong model, so 0.341 is modest, meaning the model generalises to new samples with limited confidence). Classification accuracy was 53.3%, which is better than random (33% for three groups) but not clinically strong on its own. In total, 23 of the 79 metabolites had VIP scores above 1.0, meaning they contributed meaningfully to the group separation. The top five by VIP score were: glutamic acid, myristoleic acid, α-ketoglutaric acid, 3-hydroxypropionic acid, and tyrosine — consistent with the univariate FDR results.
 
 ---
 
@@ -118,6 +118,8 @@ The 6 significant metabolite names have been written to `results/sig_metabolites
 
 To run enrichment: upload `results/sig_metabolites_for_metaboanalyst.txt` to MetaboAnalyst → Pathway Analysis → KEGG → Homo sapiens.
 
+**A biological connection worth noting:** glutamic acid and α-ketoglutaric acid are not independent signals — they are one step apart in a well-known reaction. The enzyme glutamate dehydrogenase converts glutamate directly into α-ketoglutarate, which then enters the TCA (citric acid) cycle. Both rising together from Control to NAFL to NASH reflects increased flux through this conversion, consistent with the metabolic stress on the liver as disease progresses. Treating them as two separate hits would overstate the breadth of the signal; they are better understood as one connected metabolic event.
+
 ---
 
 ## Key Limitations of This Reanalysis
@@ -125,6 +127,13 @@ To run enrichment: upload `results/sig_metabolites_for_metaboanalyst.txt` to Met
 - **No individual patient data.** The CSV contains summary statistics only. Steps 3 (Shapiro-Wilk), 5 (Jonckheere-Terpstra), and 7 (PLS-DA) cannot be run from this file.
 - **`<0.001` truncation.** Several KW p-values are reported only as `<0.001`. This loses precision when re-computing FDR, causing slight differences from the paper's Qval_FDR for borderline metabolites (notably Palmitoleic acid). We used the paper's provided Qval_FDR as primary reference.
 - **Heatmap is a proxy.** The heatmap is built from group means, not from 86 individual Z-scores as in the paper's Figure 1A.
+- **No individual-level classification metrics.** This analysis validates the paper's group-level statistical findings using the public summary table. It cannot assess how well these metabolites classify individual patients — metrics like sensitivity, specificity, or ROC curves require per-patient data to compute. The paper's reported accuracy of 53.3% came from their own PLS-DA model on the full individual dataset; that number cannot be reproduced or verified here.
+
+**What would become possible with the raw per-patient data:** real Shapiro-Wilk normality testing on each metabolite in each group, a real Jonckheere-Terpstra ordered-trend test with a proper p-value, independent recomputation of the PLS-DA with scores plot and VIP scores, and ROC-curve evaluation of a potential diagnostic metabolite score. These are the natural next steps if the data were obtained from the authors.
+
+## Connection to the Broader NAFLD Multi-Omics Project
+
+This metabolomics result sits alongside the RNA-seq work already done in this project as a second, independent line of evidence for NAFLD progression. The existing gene expression analysis of the GSE162694 dataset identified TREM2, SPP1, and COL1A1 as robust markers of disease severity at the transcriptome level. The Ji et al. paper itself made a similar cross-layer connection (their Figure 7), integrating the significant metabolites with gene expression data to map the metabolic–transcriptomic landscape of NAFLD. Having both layers — the metabolite signal (glutamic acid, α-ketoglutaric acid, the monounsaturated fatty acids) and the gene signal (fibrosis and macrophage markers) — puts this work in a position to ask the next question: do the patients with the highest glutamic acid also show the highest SPP1 expression? That integration step is a future task.
 
 ---
 
