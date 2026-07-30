@@ -1,0 +1,71 @@
+metabolite_id,metabolite_name,subsystem,gene_symbol,gene_name
+m00001,Glutamate,Amino acid metabolism,GLUD1,Glutamate dehydrogenase 1
+m00001,Glutamate,Amino acid metabolism,GLUD2,Glutamate dehydrogenase 2
+m00001,Glutamate,Amino acid metabolism,GOT1,Glutamic-oxaloacetic transaminase 1
+m00001,Glutamate,Amino acid metabolism,GOT2,Glutamic-oxaloacetic transaminase 2
+m00001,Glutamate,Amino acid metabolism,GPT,Glutamic-pyruvic transaminase
+m00001,Glutamate,Amino acid metabolism,GPT2,Glutamic-pyruvic transaminase 2
+m00001,Glutamate,Amino acid metabolism,GLUL,Glutamate-ammonia ligase
+m00001,Glutamate,Amino acid metabolism,GLS,Glutaminase
+m00001,Glutamate,Amino acid metabolism,GLS2,Glutaminase 2
+m00002,Isocitrate,TCA cycle,IDH1,Isocitrate dehydrogenase (NADP+) 1
+m00002,Isocitrate,TCA cycle,IDH2,Isocitrate dehydrogenase (NADP+) 2
+m00002,Isocitrate,TCA cycle,IDH3A,Isocitrate dehydrogenase (NAD+) 3 alpha
+m00002,Isocitrate,TCA cycle,IDH3B,Isocitrate dehydrogenase (NAD+) 3 beta
+m00002,Isocitrate,TCA cycle,IDH3G,Isocitrate dehydrogenase (NAD+) 3 gamma
+m00002,Isocitrate,TCA cycle,ACO1,Aconitase 1
+m00002,Isocitrate,TCA cycle,ACO2,Aconitase 2
+m00003,Succinate,TCA cycle,SUCLA2,Succinate-CoA ligase ADP-forming subunit beta
+m00003,Succinate,TCA cycle,SUCLG1,Succinate-CoA ligase alpha subunit
+m00003,Succinate,TCA cycle,SUCLG2,Succinate-CoA ligase GDP-forming subunit beta
+m00003,Succinate,TCA cycle,SDHA,Succinate dehydrogenase complex subunit A
+m00003,Succinate,TCA cycle,SDHB,Succinate dehydrogenase complex subunit B
+m00003,Succinate,TCA cycle,SDHC,Succinate dehydrogenase complex subunit C
+m00003,Succinate,TCA cycle,SDHD,Succinate dehydrogenase complex subunit D
+m00004,Fumarate,TCA cycle,FH,Fumarate hydratase
+m00004,Fumarate,TCA cycle,SDHA,Succinate dehydrogenase complex subunit A
+m00004,Fumarate,TCA cycle,SDHB,Succinate dehydrogenase complex subunit B
+m00005,Malate,TCA cycle,MDH1,Malate dehydrogenase 1
+m00005,Malate,TCA cycle,MDH2,Malate dehydrogenase 2
+m00005,Malate,TCA cycle,ME1,Malic enzyme 1
+m00005,Malate,TCA cycle,ME2,Malic enzyme 2
+m00005,Malate,TCA cycle,ME3,Malic enzyme 3
+m00006,Pyruvate,Glycolysis & Pyruvate metabolism,PKLR,Pyruvate kinase L/R
+m00006,Pyruvate,Glycolysis & Pyruvate metabolism,PKM,Pyruvate kinase M1/M2
+m00006,Pyruvate,Glycolysis & Pyruvate metabolism,PDHA1,Pyruvate dehydrogenase E1 subunit alpha 1
+m00006,Pyruvate,Glycolysis & Pyruvate metabolism,PDHB,Pyruvate dehydrogenase E1 subunit beta
+m00006,Pyruvate,Glycolysis & Pyruvate metabolism,LDHA,Lactate dehydrogenase A
+m00006,Pyruvate,Glycolysis & Pyruvate metabolism,LDHB,Lactate dehydrogenase B
+m00006,Pyruvate,Glycolysis & Pyruvate metabolism,PC,Pyruvate carboxylase
+m00007,Lactate,Glycolysis & Pyruvate metabolism,LDHA,Lactate dehydrogenase A
+m00007,Lactate,Glycolysis & Pyruvate metabolism,LDHB,Lactate dehydrogenase B
+m00007,Lactate,Glycolysis & Pyruvate metabolism,LDHC,Lactate dehydrogenase C
+m00008,Palmitate,Fatty acid biosynthesis & oxidation,FASN,Fatty acid synthase
+m00008,Palmitate,Fatty acid biosynthesis & oxidation,ACACA,Acetyl-CoA carboxylase alpha
+m00008,Palmitate,Fatty acid biosynthesis & oxidation,ACACB,Acetyl-CoA carboxylase beta
+m00008,Palmitate,Fatty acid biosynthesis & oxidation,CPT1A,Carnitine palmitoyltransferase 1A
+m00008,Palmitate,Fatty acid biosynthesis & oxidation,CPT2,Carnitine palmitoyltransferase 2
+m00008,Palmitate,Fatty acid biosynthesis & oxidation,ACADM,Acyl-CoA dehydrogenase medium chain
+m00008,Palmitate,Fatty acid biosynthesis & oxidation,ACADVL,Acyl-CoA dehydrogenase very long chain
+m00009,Oleate / Monounsaturated FA,Lipid & Fatty acid metabolism,SCD,Stearoyl-CoA desaturase
+m00009,Oleate / Monounsaturated FA,Lipid & Fatty acid metabolism,FASN,Fatty acid synthase
+m00009,Oleate / Monounsaturated FA,Lipid & Fatty acid metabolism,PNPLA3,Patatin-like phospholipase domain containing 3
+m00010,Bilirubin,Heme & Porphyrin metabolism,HMOX1,Heme oxygenase 1
+m00010,Bilirubin,Heme & Porphyrin metabolism,HMOX2,Heme oxygenase 2
+m00010,Bilirubin,Heme & Porphyrin metabolism,BLVRA,Biliverdin reductase A
+m00010,Bilirubin,Heme & Porphyrin metabolism,UGT1A1,UDP glucuronosyltransferase family 1 member A1
+m00011,Taurine,Sulfur & Amino acid metabolism,CDO1,Cysteine dioxygenase type 1
+m00011,Taurine,Sulfur & Amino acid metabolism,CSAD,Cysteine sulfinic acid decarboxylase
+m00011,Taurine,Sulfur & Amino acid metabolism,GAD1,Glutamate decarboxylase 1
+m00012,Acetyl-CoA,Central carbon metabolism,CS,Citrate synthase
+m00012,Acetyl-CoA,Central carbon metabolism,ACLY,ATP citrate lyase
+m00012,Acetyl-CoA,Central carbon metabolism,ACSS2,Acyl-CoA synthetase short chain family member 2
+m00012,Acetyl-CoA,Central carbon metabolism,ACACA,Acetyl-CoA carboxylase alpha
+m00013,Alanine,Amino acid metabolism,GPT,Glutamic-pyruvic transaminase
+m00013,Alanine,Amino acid metabolism,GPT2,Glutamic-pyruvic transaminase 2
+m00014,Aspartate,Amino acid metabolism,GOT1,Glutamic-oxaloacetic transaminase 1
+m00014,Aspartate,Amino acid metabolism,GOT2,Glutamic-oxaloacetic transaminase 2
+m00014,Aspartate,Amino acid metabolism,ASNS,Asparagine synthetase
+m00015,Cholesterol,Steroid & Lipid biosynthesis,HMGCR,HMG-CoA reductase
+m00015,Cholesterol,Steroid & Lipid biosynthesis,HMGCS1,HMG-CoA synthase 1
+m00015,Cholesterol,Steroid & Lipid biosynthesis,SQLE,Squalene epoxidase
