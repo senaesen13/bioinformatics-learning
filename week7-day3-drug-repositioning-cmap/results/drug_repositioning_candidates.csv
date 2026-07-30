@@ -1,9 +1,9 @@
-"Compound","Mechanism","Target_Class","Raw_Connectivity","Tau_Score"
-"Obeticholic Acid","FXR Agonist","Nuclear Receptor",-0.89,-98.5
-"Resmetirom","THR-beta Agonist","Nuclear Receptor",-0.85,-95.2
-"Pioglitazone","PPAR-gamma Agonist","Nuclear Receptor",-0.82,-91.4
-"Metformin","AMPK Activator","Kinase",-0.78,-86.8
-"Fenofibrate","PPAR-alpha Agonist","Nuclear Receptor",-0.75,-82.1
-"Vorinostat","HDAC Inhibitor","Epigenetic",-0.71,-77.5
-"Pictilisib","PI3K Inhibitor","Kinase",-0.68,-73.2
-"Rapamycin","mTOR Inhibitor","Kinase",-0.64,-68.9
+Compound,Mechanism,Target_Class,Min_NCS,Tau_Source,DB_Notes
+Vorinostat,HDAC Inhibitor,Epigenetic,-1.5791,LINCS_L1000_REAL_QUERY_20260730,Same as original
+Sirolimus,mTOR Inhibitor,Kinase,-1.5134,LINCS_L1000_REAL_QUERY_20260730,= Rapamycin (original name not in DB)
+GDC-0941,PI3K Inhibitor,Kinase,-1.4906,LINCS_L1000_REAL_QUERY_20260730,= Pictilisib (INN not in DB; GDC-0941 is development code)
+Pioglitazone,PPAR-gamma Agonist,Nuclear Receptor,-1.3282,LINCS_L1000_REAL_QUERY_20260730,Same as original
+Metformin,AMPK/Insulin Sensitizer,Kinase,-1.3248,LINCS_L1000_REAL_QUERY_20260730,Same as original
+GW-4064,FXR Agonist,Nuclear Receptor,-1.1855,LINCS_L1000_REAL_QUERY_20260730,Replaces Obeticholic Acid (not in L1000 DB)
+Fenofibrate,PPAR-alpha Agonist,Nuclear Receptor,-1.1804,LINCS_L1000_REAL_QUERY_20260730,Same as original
+Liothyronine,Thyroid Hormone Agonist,Nuclear Receptor,-0.8112,LINCS_L1000_REAL_QUERY_20260730,Replaces Resmetirom (not in L1000 DB); closest THR agonist available
