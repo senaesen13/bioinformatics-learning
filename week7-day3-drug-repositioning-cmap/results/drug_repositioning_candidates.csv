@@ -1,0 +1,9 @@
+"Compound","Mechanism","Target_Class","Raw_Connectivity","Tau_Score"
+"Obeticholic Acid","FXR Agonist","Nuclear Receptor",-0.89,-98.5
+"Resmetirom","THR-beta Agonist","Nuclear Receptor",-0.85,-95.2
+"Pioglitazone","PPAR-gamma Agonist","Nuclear Receptor",-0.82,-91.4
+"Metformin","AMPK Activator","Kinase",-0.78,-86.8
+"Fenofibrate","PPAR-alpha Agonist","Nuclear Receptor",-0.75,-82.1
+"Vorinostat","HDAC Inhibitor","Epigenetic",-0.71,-77.5
+"Pictilisib","PI3K Inhibitor","Kinase",-0.68,-73.2
+"Rapamycin","mTOR Inhibitor","Kinase",-0.64,-68.9
