@@ -1,0 +1,14 @@
+Warning messages:
+1: package ‘Seurat’ was built under R version 4.6.1 
+2: package ‘sp’ was built under R version 4.6.1 
+Loading Seurat object...
+  13239 spots, 24 clusters
+Loading annotation table...
+  24 cluster annotations loaded
+Adding bio_label metadata...
+  Unique labels: 5
+Generating UMAP panels...
+  Saved: umap_biological_labels.png
+  Saved: umap_bio_labels_only.png
+  Updated Seurat object saved.
+Done.

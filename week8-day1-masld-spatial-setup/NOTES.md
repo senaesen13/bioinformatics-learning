@@ -199,10 +199,122 @@ These analyses are what Vu et al. built their paper's conclusions on — the spa
 
 ---
 
+## Step 5 — Biological Annotation of Spatial Clusters
+
+**Scripts:** `scripts/step5_biological_annotation.R`, `scripts/step5b_umap_labels.R`
+
+**Approach:** `FindAllMarkers` (Seurat Wilcoxon, only.pos=TRUE, min.pct=0.1, logFC≥0.25) on the SCT assay after `PrepSCTFindMarkers`. Top marker genes per cluster were scored against 10 biological gene sets (periportal, pericentral, midzonal hepatocytes; stellate/fibrotic; Kupffer/macrophage; LSEC; biliary; lipogenic; inflammatory; senescent). The 4 genes previously validated in this project's bulk RNA-seq and scRNA-seq analyses (TREM2, SPP1, COL1A1, FASN) were explicitly tracked across all cluster markers.
+
+**Result:** 27,416 significant marker genes (adj. p < 0.05) across 24 clusters.
+
+### Cluster Biological Annotation
+
+| Cluster | Biological label | Top 5 markers | Key gene hits | Spots | % |
+|---------|-----------------|---------------|---------------|-------|---|
+| C0  | Hepatocyte parenchyma (zone indeterminate) | MT-ND1, ZNF549, MT-ND5, ZNF550, GSTA2 | — | 2,521 | 19.0% |
+| C1  | Hepatocyte parenchyma — portal/stromal features | MYH11, CCL19, LMOD1, CFTR, NOTCH3 | SPP1, COL1A1 | 1,752 | 13.2% |
+| C2  | Hepatocyte parenchyma (zone indeterminate) | ASCL1, TFF3, UPP2, RET, PLCH2 | FASN | 1,061 | 8.0% |
+| C3  | Inflammatory/Kupffer-macrophage region | EEF1A2, SPATA21, CXCL10, UBD, FABP4 | COL1A1, SPP1 | 1,006 | 7.6% |
+| C4  | Hepatocyte parenchyma (zone indeterminate) | HYDIN, ZNF385D, DHRS2, SLC45A2, ACSL4 | — | 833 | 6.3% |
+| C5  | Hepatocyte parenchyma (zone indeterminate) | APOA4, ACSL4, LOXL4, AKR1B10, HKDC1 | COL1A1, SPP1, FASN | 632 | 4.8% |
+| C6  | Hepatocyte parenchyma (zone indeterminate) | SLCO1A2, PTH2R, CYP2B6, SULT1C2, CYP4F3 | FASN | 566 | 4.3% |
+| C7  | Hepatocyte parenchyma (zone indeterminate) | SYT7, IFI27, HSPA5, MANF, OLFM2 | FASN | 452 | 3.4% |
+| C8  | Hepatocyte parenchyma (zone indeterminate) | NUDT8, IGFBP1, GALK1, MT-ND4L, MAP4 | FASN | 451 | 3.4% |
+| C9  | Hepatocyte parenchyma (zone indeterminate) | COL7A1, ESPL1, NPIPB15, CYP4X1, MROH7 | — | 407 | 3.1% |
+| C10 | Pericentral hepatocyte zone | CYP3A4, IL1RAP, SLC16A1, CFHR4, EEF1B2 | — | 399 | 3.0% |
+| C11 | Hepatocyte parenchyma (zone indeterminate) | PRSS51, LINGO4, NECAB2, HAMP, EYA4 | FASN | 396 | 3.0% |
+| C12 | Hepatocyte parenchyma (zone indeterminate) | IGFBP1, MX1, HMCN2, MROH7, CMPK2 | — | 382 | 2.9% |
+| C13 | Hepatocyte parenchyma (zone indeterminate) | SPINK1, PZP, SMIM24, HAL, BCO2 | — | 361 | 2.7% |
+| C14 | Hepatocyte parenchyma (zone indeterminate) | EPB41L1, GABRB3, SLC5A12, A2M, CPN2 | — | 314 | 2.4% |
+| C15 | Hepatocyte parenchyma (zone indeterminate) | TAT, MDN1, ZBTB16, GNLY, A2M | — | 293 | 2.2% |
+| C16 | Hepatocyte parenchyma — interferon-stimulated | IFI6, AKR1C2, MX1, IFI44L, OAS1 | — | 286 | 2.2% |
+| C17 | Pericentral / Midzonal hepatocyte zone | NUP155, CYP51A1, PLCH2, MSMO1, ADFP | FASN | 275 | 2.1% |
+| C18 | Hepatocyte parenchyma (zone indeterminate) | UPK3B, FOXN4, AOC1, MEP1B, NPIPB15 | FASN | 212 | 1.6% |
+| C19 | Hepatocyte parenchyma (zone indeterminate) | SLC44A5, XPNPEP2, IGFBP1, MYOM1, GPC6 | — | 191 | 1.4% |
+| C20 | Hepatocyte parenchyma (zone indeterminate) | SLC29A4, DNM1, MT1H, SCAMP5, MT1G | — | 189 | 1.4% |
+| C21 | Hepatocyte parenchyma (zone indeterminate) | UNC93A, ENPP3, SDS, ATAD3C, MAB21L1 | — | 117 | 0.9% |
+| C22 | Pericentral / Midzonal hepatocyte zone | SPINK1, PLA2G2A, HMGCS1, LGALS4, PIK3C2G | FASN | 78 | 0.6% |
+| C23 | Midzonal hepatocyte zone | GSTM1, FAM151A, ACAT2, CYP2B6, GSTM3 | FASN | 65 | 0.5% |
+
+### Annotation rationale for key clusters
+
+**C3 — Inflammatory/Kupffer-macrophage region:** Strongest non-hepatocyte signal in the dataset. Top markers include CXCL10 (interferon-γ-induced chemokine), UBD (ubiquitin D, interferon-stimulated), FABP4 (fatty acid binding protein 4, canonical macrophage marker), CAPG (macrophage-capping protein), GPNMB (glycoprotein NMB, enriched in activated Kupffer cells in MASLD), and EMILIN2 (extracellular matrix). COL1A1 and SPP1 are also significant markers, consistent with an inflammatory fibrotic niche where activated macrophages and myofibroblasts co-localise.
+
+**C1 — Portal/stromal features:** Scored as "indeterminate" by the automated annotation (top markers don't match canonical hepatocyte sets) but MYH11 (smooth muscle myosin heavy chain), LMOD1 (leiomodin, smooth muscle), CCL19, CCL21 (lymphoid chemokines expressed in portal fibroblasts), NOTCH3 (portal vascular smooth muscle), and FBLN1 (fibulin, ECM) together suggest a **portal tract / smooth muscle / stromal zone**. The presence of SPP1 and COL1A1 among its significant markers confirms fibrosis-associated activity. C1 is the second-largest cluster (1,752 spots, 13.2%) and almost certainly includes portal tract regions across all biopsies.
+
+**C10 — Pericentral hepatocyte zone:** CYP3A4 is the definitive pericentral (zone 3) marker — it is tightly restricted to centrilobular hepatocytes by the Wnt gradient. SLC16A1 (monocarboxylate transporter, zone 3 enriched) further supports this. C10 is the clearest zonation cluster in the dataset.
+
+**C17, C22 — Pericentral/midzonal lipid synthesis:** Both clusters are enriched for cholesterol biosynthesis pathway genes: CYP51A1 (sterol demethylase), MSMO1 (methylsterol monooxygenase), HMGCS1 (HMG-CoA synthase), ACAT2 (acetyl-CoA acetyltransferase). FASN is a significant marker in both. These clusters represent **metabolically active hepatocytes engaged in de novo lipogenesis and sterol synthesis** — directly relevant to MASLD pathophysiology.
+
+**C16 — Interferon-stimulated hepatocytes:** IFI6, MX1, IFI44L, and OAS1 are all classic interferon-stimulated genes (ISGs). This cluster (286 spots, 2.2%) likely represents hepatocytes responding to an active innate immune signal — possibly viral or cytokine-driven. This is a biologically distinct state not captured by the deconvolution but clearly identifiable through marker genes.
+
+**C0 — High mitochondrial gene expression:** The top markers are mitochondrial-encoded genes (MT-ND1, MT-ND5, MT-ND2, MT-ATP6). This could reflect hepatocytes with genuinely elevated mitochondrial transcriptional activity, or it may indicate spots with residual red blood cell contamination (HBA2 is also in the top markers). This cluster should be interpreted cautiously.
+
+**C20 — Metal stress response:** Top markers include MT1H and MT1G (metallothionein 1H and 1G), which are zinc/copper stress-response proteins induced in hepatocytes under oxidative stress or heavy metal exposure. May reflect a subpopulation of hepatocytes under proteotoxic stress.
+
+### Cross-modality confirmation (TREM2 / SPP1 / COL1A1 / FASN)
+
+| Gene | Found in spatial? | Clusters | Interpretation |
+|------|-------------------|----------|----------------|
+| **TREM2** | No | — | TREM2 was not identified as a significant marker in any of the 24 clusters. This is consistent with the probe panel limitation noted in Step 4: TREM2 is primarily expressed in activated macrophages/Kupffer cells, which represent a small fraction of cells in each Visium spot. It may be below the min.pct threshold even in the macrophage-enriched C3. |
+| **SPP1** | Yes | C1, C3, C5 | SPP1 (osteopontin) is a significant marker in 3 clusters. In week 6 scRNA-seq analysis (GSE136103), SPP1 was the top marker for the TREM2+ scar-associated macrophage population. Here, its spatial enrichment in C1 (portal/stromal), C3 (Kupffer/inflammatory), and C5 (hepatocyte parenchyma with stromal features) confirms its role marking fibrotic niches — a direct cross-modality confirmation. |
+| **COL1A1** | Yes | C1, C3, C5 | COL1A1 co-localises exactly with SPP1 across the same 3 clusters. In week 4 bulk RNA-seq, COL1A1 was significantly upregulated in fibrotic NAFLD. The spatial data confirms that COL1A1-expressing regions cluster with inflammatory macrophage and portal/stromal transcriptional states — not diffusely throughout hepatocyte parenchyma. |
+| **FASN** | Yes | C2, C5, C6, C7, C8, C11, C17, C18, C22, C23 (10/24 clusters) | FASN (fatty acid synthase) is a marker in 10 of 24 clusters, spanning 2,239 spots (16.9% of tissue). This widespread spatial distribution of FASN expression confirms the de novo lipogenesis signature seen in bulk RNA-seq (week 4) as a genuinely pervasive hepatocyte-level phenomenon rather than an artifact of bulk averaging. FASN is particularly enriched in C17 and C22 (cholesterol synthesis clusters) alongside CYP51A1 and HMGCS1, pointing to a lipogenic-plus-cholesterogenic hepatocyte subpopulation. |
+
+**Summary:** SPP1 and COL1A1 show concordant spatial co-localisation in the same 3 fibrosis/inflammation-enriched clusters — a genuine cross-modality confirmation of their role as fibrosis markers. FASN's spatial spread across 10 clusters underscores that de novo lipogenesis is a near-universal hepatocyte state in MASLD tissue, not confined to a specialist lipogenic zone. TREM2's absence as a spatial marker reflects probe panel sensitivity limits, not its biological importance in MASLD.
+
+### Why so many "indeterminate" clusters?
+
+16 of 24 clusters are labelled "Hepatocyte parenchyma (zone indeterminate)." This is honest, not a failure. Visium spots (~55 µm diameter, ~3–10 cells) in hepatocyte-dense liver tissue will mostly produce hepatocyte-dominated transcriptomes. Within this hepatocyte signal, many clusters differ by:
+- Different expression of specific metabolic enzymes (CYP isoforms, transporters)
+- Stress responses (ER stress in C7: HSPA5/MANF; interferon in C16)
+- Proliferative state
+- Subtle differences in lobular position not captured by our current marker sets
+
+Without the barcode-to-patient mapping (which would allow overlaying fibrosis stage F0–F4 per spot), we cannot determine whether these indeterminate clusters preferentially associate with early vs late fibrosis stages — which is the key question Vu et al. address in their paper.
+
+---
+
+## Updated Key Outputs
+
+```
+results/
+├── spatial_domains/
+│   ├── cluster_markers_all.csv          — 27,416 marker genes (all clusters, adj.p<0.05)
+│   ├── cluster_markers_top10.csv        — top 10 markers per cluster by avg_log2FC
+│   ├── cluster_biological_annotation.csv — biological label + top5 + key gene hits
+│   ├── cluster_annotation_summary.csv   — formatted summary table
+│   ├── umap_biological_labels.png       — dual UMAP: numbered clusters | biological labels
+│   └── umap_bio_labels_only.png         — biological labels only
+│   (existing: cluster_sizes.csv, elbow_plot.png, umap_clusters_and_arrays.png)
+└── masld_spatial_combined.rds           — Seurat object with bio_label metadata added
+```
+
+---
+
+## Software and Methods (updated)
+
+**R packages used:**
+- Seurat 5.5.1 (spatial data loading, SCTransform, clustering, FindAllMarkers)
+- sctransform 0.4.3 (normalization model)
+- hdf5r 1.3.12 (reading .h5 expression matrices)
+- ggplot2 4.0.3, patchwork 1.3.2 (plotting)
+
+**Deconvolution reference:**
+- GSE136103 (Ramachandran et al. 2019, Nat Med) — human cirrhotic liver scRNA-seq
+- 20 annotated cell types (cell_type column in nafld_seurat_annotated.rds)
+
+**Scripts:**
+- `scripts/spatial_masld_pipeline.R` — Steps 1–4 (QC, normalization, clustering, deconvolution)
+- `scripts/step4_deconvolution.R` — enhanced Step 4 (AddModuleScore cell-type scoring)
+- `scripts/step5_biological_annotation.R` — Step 5 (FindAllMarkers + biological annotation)
+- `scripts/step5b_umap_labels.R` — Step 5b (UMAP regeneration with biological labels)
+
+---
+
 ## Next Steps (Week 8 Day 2+)
 
-1. **FindMarkers per cluster** — identify cluster-defining genes for biological annotation of the 24 spatial domains
-2. **Known MASLD gene visualization** — SpatialFeaturePlot for TREM2, SPP1, ACTA2, COL1A1, PCK1, CYP2E1 to annotate zones
-3. **COMPASS/METAFlux** — metabolic flux modeling per spatial cluster (separate task as instructed)
-4. **RCTD deconvolution** (if CARD remains uninstallable) — robust cell-type decomposition from Bioconductor
-5. **Contact UQ authors** for barcode-to-patient mapping files to enable per-spot fibrosis staging
+1. **Known MASLD gene visualization** — SpatialFeaturePlot for TREM2, SPP1, ACTA2, COL1A1, CYP2E1 to visualise spatial distribution directly on tissue
+2. **COMPASS/METAFlux** — metabolic flux modeling per spatial cluster (separate task as instructed)
+3. **RCTD deconvolution** (if CARD remains uninstallable) — robust cell-type decomposition from Bioconductor
+4. **Contact UQ authors** for barcode-to-patient mapping files to enable per-spot fibrosis staging

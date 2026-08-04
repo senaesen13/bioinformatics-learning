@@ -1,0 +1,25 @@
+"Cluster ID","Biological label","Top 5 markers","Key gene hits","Spot count","% of total"
+0,"Hepatocyte parenchyma (zone indeterminate)","MT-ND1, ZNF549, MT-ND5, ZNF550, GSTA2","",2521,19
+1,"Hepatocyte parenchyma (zone indeterminate)","MYH11, CCL19, LMOD1, CFTR, NOTCH3","SPP1, COL1A1",1752,13.2
+2,"Hepatocyte parenchyma (zone indeterminate)","ASCL1, TFF3, UPP2, RET, PLCH2","FASN",1061,8
+3,"Inflammatory/Kupffer-macrophage region","EEF1A2, SPATA21, CXCL10, UBD, FABP4","COL1A1, SPP1",1006,7.6
+4,"Hepatocyte parenchyma (zone indeterminate)","HYDIN, ZNF385D, DHRS2, SLC45A2, ASCL1","",833,6.3
+5,"Hepatocyte parenchyma (zone indeterminate)","APOA4, ACSL4, LOXL4, AKR1B10, HKDC1","COL1A1, SPP1, FASN",632,4.8
+6,"Hepatocyte parenchyma (zone indeterminate)","SLCO1A2, PTH2R, CYP2B6, SULT1C2, ZNF385D","FASN",566,4.3
+7,"Hepatocyte parenchyma (zone indeterminate)","SYT7, IFI27, HSPA5, MANF, OLFM2","FASN",452,3.4
+8,"Hepatocyte parenchyma (zone indeterminate)","NUDT8, IGFBP1, GALK1, MT-ND4L, MAB21L4","FASN",451,3.4
+9,"Hepatocyte parenchyma (zone indeterminate)","COL7A1, ESPL1, NPIPB15, CYP4X1, MAB21L4","",407,3.1
+10,"Pericentral hepatocyte zone","CYP3A4, IL1RAP, SLC16A1, CFHR4, EFHC1","",399,3
+11,"Hepatocyte parenchyma (zone indeterminate)","PRSS51, LINGO4, NECAB2, HAMP, EYA2","FASN",396,3
+12,"Hepatocyte parenchyma (zone indeterminate)","IGFBP1, MX1, HMCN2, MROH7, CMPK2","",382,2.9
+13,"Hepatocyte parenchyma (zone indeterminate)","SPINK1, PZP, SMIM24, HAL, BCO2","",361,2.7
+14,"Hepatocyte parenchyma (zone indeterminate)","EPB41L1, GABRB3, SLC5A12, A2M, COL5A3","",314,2.4
+15,"Hepatocyte parenchyma (zone indeterminate)","TAT, MDN1, ZBTB16, GNLY, A2M","",293,2.2
+16,"Hepatocyte parenchyma (zone indeterminate)","IFI6, AKR1C2, MX1, IFI44L, OAS1","",286,2.2
+17,"Pericentral hepatocyte zone / Midzonal hepatocyte zone","NUP155, CYP51A1, PLCH2, MSMO1, ADH1C","FASN",275,2.1
+18,"Hepatocyte parenchyma (zone indeterminate)","UPK3B, FOXN4, AOC1, MEP1B, NPIPB15","FASN",212,1.6
+19,"Hepatocyte parenchyma (zone indeterminate)","SLC44A5, XPNPEP2, IGFBP1, MYOM1, TREH","",191,1.4
+20,"Hepatocyte parenchyma (zone indeterminate)","SLC29A4, DNM1, MT1H, SCAMP5, MT1G","",189,1.4
+21,"Hepatocyte parenchyma (zone indeterminate)","UNC93A, ENPP3, SDS, ATAD3C, MAB21L4","",117,0.9
+22,"Pericentral hepatocyte zone / Midzonal hepatocyte zone","SPINK1, PLA2G2A, HMGCS1, LGALS4, SLC13A3","FASN",78,0.6
+23,"Midzonal hepatocyte zone","GSTM1, FAM151A, ACAT2, CYP2B6, GSTA2","FASN",65,0.5

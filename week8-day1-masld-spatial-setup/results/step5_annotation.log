@@ -1,0 +1,71 @@
+Warning messages:
+1: package ‘Seurat’ was built under R version 4.6.1 
+2: package ‘sp’ was built under R version 4.6.1 
+Loading combined Seurat object...
+  Object: 13239 spots × 17910 genes, 24 clusters
+
+=== Step 5.1: FindAllMarkers ===
+  JoinLayers on Spatial assay (Seurat v5 requirement after merge)...
+  PrepSCTFindMarkers...
+Warning message:
+package ‘future’ was built under R version 4.6.1 
+  FindAllMarkers (Wilcoxon, only.pos=TRUE, min.pct=0.1, logfc.threshold=0.25)...
+For a (much!) faster implementation of the Wilcoxon Rank Sum Test,
+(default method for FindMarkers) please install the presto package
+--------------------------------------------
+install.packages('devtools')
+devtools::install_github('immunogenomics/presto')
+--------------------------------------------
+After installation of presto, Seurat will automatically use the more 
+efficient implementation (no further action necessary).
+This message will be shown once per session
+  Saved: 27416 marker genes total
+  Top 10 per cluster saved (240 rows)
+
+=== Step 5.2: Biological annotation ===
+
+Biological annotation summary:
+Cl    Label                                                Top 5 markers                       Key genes
+-------------------------------------------------------------------------------------------------------------- 
+C0    Hepatocyte parenchyma (zone indeterminate)           MT-ND1, ZNF549, MT-ND5, ZNF550, G   (none)
+C1    Hepatocyte parenchyma (zone indeterminate)           MYH11, CCL19, LMOD1, CFTR, NOTCH3   SPP1, COL1A1
+C2    Hepatocyte parenchyma (zone indeterminate)           ASCL1, TFF3, UPP2, RET, PLCH2       FASN
+C3    Inflammatory/Kupffer-macrophage region               EEF1A2, SPATA21, CXCL10, UBD, FAB   COL1A1, SPP1
+C4    Hepatocyte parenchyma (zone indeterminate)           HYDIN, ZNF385D, DHRS2, SLC45A2, A   (none)
+C5    Hepatocyte parenchyma (zone indeterminate)           APOA4, ACSL4, LOXL4, AKR1B10, HKD   COL1A1, SPP1, FASN
+C6    Hepatocyte parenchyma (zone indeterminate)           SLCO1A2, PTH2R, CYP2B6, SULT1C2,    FASN
+C7    Hepatocyte parenchyma (zone indeterminate)           SYT7, IFI27, HSPA5, MANF, OLFM2     FASN
+C8    Hepatocyte parenchyma (zone indeterminate)           NUDT8, IGFBP1, GALK1, MT-ND4L, MA   FASN
+C9    Hepatocyte parenchyma (zone indeterminate)           COL7A1, ESPL1, NPIPB15, CYP4X1, M   (none)
+C10   Pericentral hepatocyte zone                          CYP3A4, IL1RAP, SLC16A1, CFHR4, E   (none)
+C11   Hepatocyte parenchyma (zone indeterminate)           PRSS51, LINGO4, NECAB2, HAMP, EYA   FASN
+C12   Hepatocyte parenchyma (zone indeterminate)           IGFBP1, MX1, HMCN2, MROH7, CMPK2    (none)
+C13   Hepatocyte parenchyma (zone indeterminate)           SPINK1, PZP, SMIM24, HAL, BCO2      (none)
+C14   Hepatocyte parenchyma (zone indeterminate)           EPB41L1, GABRB3, SLC5A12, A2M, CO   (none)
+C15   Hepatocyte parenchyma (zone indeterminate)           TAT, MDN1, ZBTB16, GNLY, A2M        (none)
+C16   Hepatocyte parenchyma (zone indeterminate)           IFI6, AKR1C2, MX1, IFI44L, OAS1     (none)
+C17   Pericentral hepatocyte zone / Midzonal hepatocyte    NUP155, CYP51A1, PLCH2, MSMO1, AD   FASN
+C18   Hepatocyte parenchyma (zone indeterminate)           UPK3B, FOXN4, AOC1, MEP1B, NPIPB1   FASN
+C19   Hepatocyte parenchyma (zone indeterminate)           SLC44A5, XPNPEP2, IGFBP1, MYOM1,    (none)
+C20   Hepatocyte parenchyma (zone indeterminate)           SLC29A4, DNM1, MT1H, SCAMP5, MT1G   (none)
+C21   Hepatocyte parenchyma (zone indeterminate)           UNC93A, ENPP3, SDS, ATAD3C, MAB21   (none)
+C22   Pericentral hepatocyte zone / Midzonal hepatocyte    SPINK1, PLA2G2A, HMGCS1, LGALS4,    FASN
+C23   Midzonal hepatocyte zone                             GSTM1, FAM151A, ACAT2, CYP2B6, GS   FASN
+
+--- Cross-modality confirmation (TREM2/SPP1/COL1A1/FASN) ---
+  C1 (Hepatocyte parenchyma (zone indeterminate)): SPP1, COL1A1
+  C2 (Hepatocyte parenchyma (zone indeterminate)): FASN
+  C3 (Inflammatory/Kupffer-macrophage region): COL1A1, SPP1
+  C5 (Hepatocyte parenchyma (zone indeterminate)): COL1A1, SPP1, FASN
+  C6 (Hepatocyte parenchyma (zone indeterminate)): FASN
+  C7 (Hepatocyte parenchyma (zone indeterminate)): FASN
+  C8 (Hepatocyte parenchyma (zone indeterminate)): FASN
+  C11 (Hepatocyte parenchyma (zone indeterminate)): FASN
+  C17 (Pericentral hepatocyte zone / Midzonal hepatocyte zone): FASN
+  C18 (Hepatocyte parenchyma (zone indeterminate)): FASN
+  C22 (Pericentral hepatocyte zone / Midzonal hepatocyte zone): FASN
+  C23 (Midzonal hepatocyte zone): FASN
+
+=== Step 5.3: UMAP with biological labels ===
+Error: No cell overlap between new meta data and Seurat object
+Execution halted
