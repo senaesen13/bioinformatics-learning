@@ -12,5 +12,12 @@ SRR*/
 */raw_files/
 */metadata_cache.csv
 improvements/data/Human-GEM.xml
+# Large Seurat/R objects
+*.rds
+# Spatial raw data (Visium .h5 + images — downloaded locally, not for git)
+week8-day1-masld-spatial-setup/data/raw/
+# Pipeline run logs
+week8-day1-masld-spatial-setup/results/pipeline_run.log
+week8-day1-masld-spatial-setup/results/step4_decon.log
 __pycache__/
 *.pyc
